@@ -1,5 +1,4 @@
 # Site settings
-<<<<<<< HEAD
 title:
 email:
 description: > # this means to ignore newlines until "baseurl:"
@@ -8,17 +7,6 @@ url: "" # the base hostname & protocol for your site
 
 twitter_username:
 github_username:
-=======
-title: Francis Pires
-email: francispires@msn.com
-description: > # this means to ignore newlines until "baseurl:"
-  Meu primeiro site com o GitHub Pages.
-baseurl: "" # the subpath of your site, e.g. /blog
-url: "http://www.francispires.com" # the base hostname & protocol for your site
-twitter_username: fransql
-github_username:  francispires
-faceboo_username: francispires
->>>>>>> origin/master
 
 # Build settings
 markdown: kramdown
