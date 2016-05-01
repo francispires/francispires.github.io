@@ -2,7 +2,7 @@
 layout: post
 title:  Engenharia FIAP
 date:   2016-05-01 01:21:10 -0300
-categories: math
+categories: fiap
 imgurl: /img/portfolio/7.jpg
 subtitle: Compilador
 ---
