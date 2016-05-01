@@ -1,8 +1,10 @@
 ---
 layout: post
-title:  "Bem vindo!"
+title:  Engenharia FIAP
 date:   2016-04-28 22:30:10 -0300
-categories: Ambiente
+categories: math
+imgurl: /img/portfolio/7.jpg
+subtitle: E=MC²
 ---
 
 Vamos lá, os tempos passam e cada vez um paradigma novo se apresenta, agora vamos testar as páginas estáticas do jekyll.

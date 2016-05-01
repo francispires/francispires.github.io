@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  {% include head.html %}
+  <body id="page-top">
+    {% include nav.html %}
+    {% capture imgCategory %}{{ page.imgCategory }}{% endcapture %}
+    {% include headerCategory.html %}
+    <div class="page-content">
+      <h3 class="text-center">
+        {{page.title}}
+      </h3>
+      <div class="wrapper">
+        {{ content }}
+      </div>
+    </div>
+    {% include contact.html %}
+    {% include scripts.html %}
+  </body>
+</html>

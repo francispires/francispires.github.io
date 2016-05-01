@@ -1,15 +1,37 @@
 ---
-layout: default
+layout: post
 ---
-<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 
-  <header class="post-header">
-    <h1 class="post-title" itemprop="name headline">{{ page.title }}</h1>
-    <p class="post-meta"><time datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">{{ page.date | date: "%b %-d, %Y" }}</time>{% if page.author %} • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">{{ page.author }}</span></span>{% endif %}</p>
-  </header>
+<!DOCTYPE html>
+<html>
+  {% include head.html %}
+  <body id="page-top">
+    {% include nav.html %}
+    <div class="page-content">
+      <div class="wrapper">
+        <section id="contact">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-lg-offset-2 text-center">
+                        <h2 class="section-heading">{{title}}</h2>
+                        <hr class="primary">
+                        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+                          <div class="post-header">
+                            <h1 class="post-title" itemprop="name headline">{{ page.title }}</h1>
+                            <h4 class="post-title" itemprop="name headline">{{ page.subtitle }}</h4>
+                            <p class="post-meta"><time datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">{{ page.date | date: "%b %-d, %Y" }}</time>{% if page.author %} • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">{{ page.author }}</span></span>{% endif %}</p>
+                          </div>
 
-  <div class="post-content" itemprop="articleBody">
-    {{ content }}
-  </div>
-
-</article>
+                          <div class="post-content text-justify" itemprop="articleBody">
+                            {{ content }}
+                          </div>
+                        </article>
+                    </div>
+            </div>
+        </section>
+      </div>
+    </div>
+    {% include contact.html %}
+      {% include scripts.html %}
+  </body>
+</html>

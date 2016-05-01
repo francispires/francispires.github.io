@@ -1,0 +1,30 @@
+---
+layout: category
+imgCategory: /img/portfolio/10.jpg
+title: Matemática
+---
+<section class="no-padding" id="portfolio">
+    <div class="container-fluid">
+        <div class="row no-gutter">
+          {% for post in site.posts %}
+            {% if post.categories contains 'math' %}
+              <div class="col-lg-6 col-sm-6">
+                  <a href="{{ post.url }}" class="portfolio-box">
+                      <img src="{{post.imgurl}}" class="img-responsive" alt="">
+                      <div class="portfolio-box-caption">
+                          <div class="portfolio-box-caption-content">
+                              <div class="project-category text-faded">
+                                  {{ post.title }}
+                              </div>
+                              <div class="project-name">
+                                  {{ post.subtitle }}
+                              </div>
+                          </div>
+                      </div>
+                  </a>
+              </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </section>

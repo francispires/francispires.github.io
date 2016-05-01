@@ -5,5 +5,6 @@ twitter_username: fransql
 github_username: francispires
 intro: Desenvolvendo-se desenvolvendo
 subintro: Bem vindo ao meu site, sinta-se à vontade
+category-list: [fia, fiap, musica, math, games, madeirada]
 # Build settings
 markdown: kramdown
