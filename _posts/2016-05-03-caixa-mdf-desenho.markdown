@@ -1,10 +1,10 @@
 ---
 layout: post
-title:  Update Panel no Sharepoint 2013
+title:  Caixas
 date:   2016-05-03 01:21:10 -0300
-categories: fia
+categories: madeiradas
 imgurl: /img/portfolio/7.jpg
-subtitle: O Sonho impossível
+subtitle: Um novo aprendizado
 ---
 Este final de semana eu fiz a primeira tentativa de montar minha caixa acústica, funcionou, mas pode melhorar.
 
