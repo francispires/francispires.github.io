@@ -1,0 +1,53 @@
+---
+layout: default
+title: Admin
+---
+<div class="frmPost">
+<form>
+  <fieldset class="form-group">
+    <label for="postname">Nome</label>
+    <input type="text" class="form-control" id="postname" placeholder="Digite o nome do post">
+    <small class="text-muted">Será usado o formato 2016-04-28-nome-do-post.</small>
+  </fieldset>
+  <fieldset class="form-group">
+    <label for="exampleInputPassword1">Password</label>
+    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+  </fieldset>
+  <fieldset class="form-group">
+    <label for="postcategory">Categoria do post</label>
+    <select multiple="" class="form-control" id="postcategory">
+      <option>Fia</option>
+      <option>Fiap</option>
+      <option>Math</option>
+      <option>Code</option>
+      <option>Madeiradas</option>
+    </select>
+  </fieldset>
+  <fieldset class="form-group">
+    <label for="postcontent">Conteúdo</label>
+    <textarea class="form-control" id="postcontent" rows="3"></textarea>
+  </fieldset>
+  <fieldset class="form-group">
+    <label for="postimage">Imagem</label>
+    <input type="file" class="form-control-file" id="postimage">
+    <small class="text-muted">Pode ser usada uma url.</small>
+  </fieldset>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox"> Check me out
+    </label>
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+</div>
+<script>
+  function newpost() {
+    $.post("https://api.github.com/repos/francispires/francispires.github.io/issues/{{page.commentIssueId}}"+"/comments", {
+        "body": "New Coment on..."
+      },
+      success: function(msg){
+        loadComments(msg);
+      }
+    });
+  }
+</script>
