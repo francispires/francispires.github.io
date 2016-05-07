@@ -42,12 +42,14 @@ title: Admin
 </div>
 <script>
   function newpost() {
-    $.post("https://api.github.com/repos/francispires/francispires.github.io/issues/{{page.commentIssueId}}"+"/comments", {
-        "body": "New Coment on..."
+    $.ajax({
+      type: "POST",
+      url: "https://api.github.com/repos/francispires/francispires.github.io/issues/{{page.commentIssueId}}"+"/comments",
+      data: {body:"New post...."},
+      success: function () {
+        alert('ok!!!');
       },
-      success: function(msg){
-        loadComments(msg);
-      }
+      dataType: "application/vnd.github.full+json"
     });
-  }
+      }
 </script>
