@@ -46,7 +46,7 @@ title: Admin
       url: "https://api.github.com/repos/francispires/francispires.github.io/issues/6"+"/comments",
         type: 'POST',
         beforeSend: function(xhr) {
-            xhr.setRequestHeader("Authorization", "token TOKEN-FROM-AUTHORIZATION-CALL");
+            xhr.setRequestHeader("Authorization", "Basic " + btoa("USERNAME:PASSWORD")); 
         },
         data:  {"body":"New post...."}
     }).done(function(response) {
