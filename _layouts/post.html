@@ -54,7 +54,7 @@ layout: post
         + "</a></div><div class='commentbody'>" + cbody + "</div></div>");
     }
   }
-  $.ajax("https://github.com/francispires/francispires.github.io/issues/{{page.commentIssueId}}"+"/comments", {
+  $.ajax("https://api.github.com/repos/francispires/francispires.github.io/issues/{{page.commentIssueId}}"+"/comments", {
     headers: {Accept: "application/vnd.github.full+json"},
     success: function(msg){
       loadComments(msg);
