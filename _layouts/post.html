@@ -42,7 +42,7 @@ layout: post
     for (var i = 0; i < data.length; i++) {
       var cuser = data[i].user.login;
       var cuserlink = 'https://github.com/'+data[i].user.login;
-      var clink = "https://github.com/francispires/francispires.github.io/issues/{{page.commentIssueId}}"+ data[i].url.substring(data[i].url.lastIndexOf("/")+1);,
+      var clink = "https://github.com/francispires/francispires.github.io/issues/{{page.commentIssueId}}"+ data[i].url.substring(data[i].url.lastIndexOf("/")+1);
       var cbody = data[i].body_html;
       var cavatarlink = data[i].user.avatar_url;
       var cdate = Date.parse(data[i].created_at).toString("yyyy-MM-dd HH:mm:ss");
