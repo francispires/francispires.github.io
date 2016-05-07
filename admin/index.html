@@ -45,7 +45,7 @@ title: Admin
     $.ajax({
       type: "POST",
       url: "https://api.github.com/repos/francispires/francispires.github.io/issues/6"+"/comments",
-      data: {body:"New post...."},
+      data: {"body":"New post...."},
       success: function () {
         alert('ok!!!');
       },
