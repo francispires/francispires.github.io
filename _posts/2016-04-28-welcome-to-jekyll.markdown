@@ -5,6 +5,7 @@ date:   2016-04-28 22:30:10 -0300
 categories: math
 imgurl: /img/portfolio/9.jpg
 subtitle: lindamente estático
+commentIssueId: 1
 ---
 
 Vamos lá, os tempos passam e cada vez um paradigma novo se apresenta, agora vamos testar as páginas estáticas do jekyll.

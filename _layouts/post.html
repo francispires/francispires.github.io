@@ -21,17 +21,37 @@ layout: post
                             <h4 class="post-title" itemprop="name headline">{{ page.subtitle }}</h4>
                             <p class="post-meta"><time datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">{{ page.date | date: "%b %-d, %Y" }}</time>{% if page.author %} • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">{{ page.author }}</span></span>{% endif %}</p>
                           </div>
-
                           <div class="post-content text-justify" itemprop="articleBody">
                             {{ content }}
                           </div>
                         </article>
                     </div>
-            </div>
+                    <p>
+                      Deixe-me uma mensagem em,<a href="https://github.com/francispires/francispires.github.io/issues/{{page.commentIssueId}}"></a> (Você precisará de uma conta Github, ainda não tem uma?!)
+                    </p>
+                  </div>
         </section>
       </div>
     </div>
     {% include contact.html %}
       {% include scripts.html %}
   </body>
+  <script type="text/javascript" src="http://datejs.googlecode.com/svn/trunk/build/date-en-US.js"></script>
+  <script>
+  function loadComments(data) {
+    for (var i = 0; i < data.length; i++) {
+      var cuser = data[i].user.login;
+      var cuserlink = 'https://github.com/'+data[i].user.login;
+      var clink = "https://github.com/francispires/francispires.github.io/issues/{{page.commentIssueId}}"+ data[i].url.substring(data[i].url.lastIndexOf("/")+1);,
+      var cbody = data[i].body_html;
+      var cavatarlink = data[i].user.avatar_url;
+      var cdate = Date.parse(data[i].created_at).toString("yyyy-MM-dd HH:mm:ss");
+      $("comments").append("<div class='comment'><div class='commentheader'><div class='commentgravatar'>"
+        + '<img src="' + cavatarlink + '" alt="" width="20" height="20">'
+        + "</div><a class='commentuser' href=\""+ cuserlink + "\">" + cuser
+        + "</a><a class='commentdate' href=\"" + clink + "\">" + cdate
+        + "</a></div><div class='commentbody'>" + cbody + "</div></div>");
+    }
+  }
+  </script>
 </html>

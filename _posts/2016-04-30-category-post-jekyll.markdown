@@ -5,6 +5,7 @@ date:   2016-05-01 01:21:10 -0300
 categories: fiap
 imgurl: /img/portfolio/7.jpg
 subtitle: Compilador
+commentIssueId: 2
 ---
 Às vezes subestimamos algumas matérias por ter algum conhecimento prévio, fora assim durante todos os anos na faculdade, por ser um programador
 acreditei que não havia muito o que aprender nas aulas de programação e por sorte eu estava certo, de fato não havia nada o que aprender, talvez praticar

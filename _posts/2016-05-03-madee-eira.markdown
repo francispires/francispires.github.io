@@ -5,6 +5,7 @@ date:   2016-05-03 01:21:10 -0300
 categories: madeiradadas
 imgurl: /img/portfolio/6.jpg
 subtitle: dificuldades
+commentIssueId: 5
 ---
 Quando recebi as madeiras para montar minha primeira caixa eu logo pensei, já que eu pedi que elas viessem cortadas eu conseguir montar elas em menos de 3 horas, afinal é só colar.
 Estava enganado, muito enganado!!!

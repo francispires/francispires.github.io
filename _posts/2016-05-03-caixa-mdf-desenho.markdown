@@ -5,6 +5,7 @@ date:   2016-05-03 01:21:10 -0300
 categories: madeiradas
 imgurl: /img/portfolio/7.jpg
 subtitle: Um novo aprendizado
+commentIssueId: 4
 ---
 Este final de semana eu fiz a primeira tentativa de montar minha caixa acústica, funcionou, mas pode melhorar.
 
