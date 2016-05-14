@@ -43,6 +43,7 @@ title: Admin
   <input type="hidden" name="hdusername" id="hdusername"/>
 </form>
 </div>
+  {% include scripts.html %}
 <script>
 function genToken() {
 	window.open('https://github.com/login/oauth/authorize?client_id=c6d0796ed6fce018dc01&scope=issues');
@@ -86,4 +87,3 @@ function newpost() {
     }
 
   </script>
-  {% include scripts.html %}
