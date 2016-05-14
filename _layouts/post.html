@@ -4,61 +4,68 @@ layout: post
 
 <!DOCTYPE html>
 <html>
-  {% include head.html %}
-  <body id="page-top">
-    {% include nav.html %}
-    <div class="page-content">
-      <div class="wrapper">
-        <section id="contact">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-8 col-lg-offset-2 text-center">
-                        <h2 class="section-heading">{{title}}</h2>
-                        <hr class="primary">
-                        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-                          <div class="post-header">
-                            <h1 class="post-title" itemprop="name headline">{{ page.title }}</h1>
-                            <h4 class="post-title" itemprop="name headline">{{ page.subtitle }}</h4>
-                            <p class="post-meta"><time datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">{{ page.date | date: "%b %-d, %Y" }}</time>{% if page.author %} • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">{{ page.author }}</span></span>{% endif %}</p>
-                          </div>
-                          <div class="post-content text-justify" itemprop="articleBody">
-                            {{ content }}
-                          </div>
-                        </article>
-                    </div>
-                  </div>
+{% include head.html %}
+<body id="page-top">
+  {% include nav.html %}
+  <div class="page-content">
+    <div class="wrapper">
+      <section id="contact">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 text-center">
+              <h2 class="section-heading">{{title}}</h2>
+              <hr class="primary">
+              <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+                <div class="post-header">
+                  <h1 class="post-title" itemprop="name headline">{{ page.title }}</h1>
+                  <h4 class="post-title" itemprop="name headline">{{ page.subtitle }}</h4>
+                  <p class="post-meta"><time datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">{{ page.date | date: "%b %-d, %Y" }}</time>{% if page.author %} • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">{{ page.author }}</span></span>{% endif %}</p>
+                </div>
+                <div class="post-content text-justify" itemprop="articleBody">
+                  {{ content }}
+                </div>
+              </article>
+            </div>
+          </div>
+            <div id="disqus_thread"></div>
         </section>
-        <div id="comments">
-          <h2>Mensagens</h2>
-          <a href="https://github.com/francispires/francispires.github.io/issues/{{page.commentIssueId}}">Deixe-me uma mensagem</a> (Você precisará de uma conta Github, ainda não tem uma?!)
-        </div>
-      </div>
-    </div>
-    {% include contact.html %}
-      {% include scripts.html %}
-  </body>
-  <script type="text/javascript" src="http://datejs.googlecode.com/svn/trunk/build/date-en-US.js"></script>
-  <script>
-  function loadComments(data) {
-    for (var i = 0; i < data.length; i++) {
-      var cuser = data[i].user.login;
-      var cuserlink = 'https://github.com/'+data[i].user.login;
-      var clink = "https://github.com/francispires/francispires.github.io/issues/{{page.commentIssueId}}"+ data[i].url.substring(data[i].url.lastIndexOf("/")+1);
-      var cbody = data[i].body_html;
-      var cavatarlink = data[i].user.avatar_url;
-      var cdate = Date.parse(data[i].created_at).toString("yyyy-MM-dd HH:mm:ss");
-      $("#comments").append("<div class='comment'><div class='commentheader'><div class='commentgravatar'>"
-        + '<img src="' + cavatarlink + '" alt="" width="20" height="20">'
-        + "</div><a class='commentuser' href=\""+ cuserlink + "\">" + cuser
-        + "</a><a class='commentdate' href=\"" + clink + "\">" + cdate
-        + "</a></div><div class='commentbody'>" + cbody + "</div></div>");
-    }
+
+        <script>
+      var disqus_config = function () {
+      this.page.url = "http://www.francispires.com.br/"; // Replace PAGE_URL with your page's canonical URL variable
+      this.page.identifier = "FrancisSite"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+      };
+      (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = '//francispires.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', + new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+    </script>
+    <noscript>Habilite seu javascript, é legal! <a href="https://disqus.com/?ref_noscript" rel="nofollow"></a></noscript>
+  </div>
+</div>
+{% include contact.html %}
+{% include scripts.html %}
+</body>
+<script type="text/javascript" src="http://datejs.googlecode.com/svn/trunk/build/date-en-US.js"></script>
+<script>
+function loadComments(data) {
+  // Vamos usar o Diqus
+  for (var i = 0; i < data.length; i++) {
+    var cuser = data[i].user.login;
+    var cuserlink = 'https://github.com/'+data[i].user.login;
+    var clink = "https://github.com/francispires/francispires.github.io/issues/{{page.commentIssueId}}"+ data[i].url.substring(data[i].url.lastIndexOf("/")+1);
+    var cbody = data[i].body_html;
+    var cavatarlink = data[i].user.avatar_url;
+    var cdate = Date.parse(data[i].created_at).toString("yyyy-MM-dd HH:mm:ss");
+    $("#comments").append("<div class='comment'><div class='commentheader'><div class='commentgravatar'>"
+    + '<img src="' + cavatarlink + '" alt="" width="20" height="20">'
+    + "</div><a class='commentuser' href=\""+ cuserlink + "\">" + cuser
+    + "</a><a class='commentdate' href=\"" + clink + "\">" + cdate
+    + "</a></div><div class='commentbody'>" + cbody + "</div></div>");
   }
-  $.ajax("https://api.github.com/repos/francispires/francispires.github.io/issues/{{page.commentIssueId}}"+"/comments", {
-    headers: {Accept: "application/vnd.github.full+json"},
-    success: function(msg){
-      loadComments(msg);
-    }
-  });
-  </script>
+}
+
+</script>
 </html>

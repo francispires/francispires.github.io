@@ -226,7 +226,7 @@ header {
     position: relative;
     display: block;
     max-width: 650px;
-    margin: 0 auto;
+    margin: 5px 5px;
     .portfolio-box-caption {
         color: white;
         opacity: 0;
@@ -348,4 +348,12 @@ img::-moz-selection {
 body {
     -webkit-tap-highlight-color: $theme-dark;
 }
-
+img.leave,.portfolio-box-caption{
+  border-bottom-left-radius: 30px;
+  border-top-right-radius: 30px;
+}
+.container-fluid {
+    padding-bottom: 10px;
+    padding-top: 10px;
+    background-color: #eee;
+}

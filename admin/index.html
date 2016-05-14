@@ -38,20 +38,52 @@ title: Admin
     </label>
   </div>
   <button type="submit" class="btn btn-primary">Submit</button>
+  <input type="hidden" name="hdcode" id="hdcode"/>
+  <input type="hidden" name="hdaccess_token" id="hdaccess_token"/>
+  <input type="hidden" name="hdusername" id="hdusername"/>
 </form>
 </div>
 <script>
-  function newpost() {
-    $.ajax({
-      url: "https://api.github.com/repos/francispires/francispires.github.io/issues/6"+"/comments",
-        type: 'POST',
-        beforeSend: function(xhr) {
-            xhr.setRequestHeader("Authorization", "Basic " + btoa("francispires:Fran139$")); 
-        },
-        data:  {"body":"New post...."}
-    }).done(function(response) {
-        console.log(response);
-    });
-      }
-</script>
+function genToken() {
+	window.open('https://github.com/login/oauth/authorize?client_id=c6d0796ed6fce018dc01&scope=issues');
+}
+window.addEventListener('message', function (event) {
+	var code = event.data;
+	$('#hdcode').val(code);
+	$.get('http://francispires.net16.net//token.php?code=' + code, function (access_token) {
+		$('#hdaccess_token').val(access_token);
+		$.getJSON('https://api.github.com/user?access_token=' + access_token, function (user) {
+			$('#hdusername').val(user.login);
+		});
+	});
+});
+$('#gist_new').click(function () {
+	var url = 'https://api.github.com/gists' +
+		'?access_token=' + $('#access_token').val();
+	var data = JSON.stringify({
+		"public": false,
+		"files": {
+			"sample.txt": {
+				"content": $('#gist_content').val()
+			}
+		}
+	});
+	$.post(url, data, function (gist) {
+		$('#gist_link').val(gist.html_url);
+	});
+});
+function newpost() {
+  $.ajax({
+      url: "https://api.github.com/repos/francispires/francispires.github.io/issues/6/comments",
+      type: 'POST',
+      beforeSend: function(xhr) {
+          xhr.setRequestHeader("Authorization", "token OAUTH-TOKEN");
+      },
+      data:  {"body":"New post...."}
+  }).done(function(response) {
+      console.log(response);
+  });
+    }
+
+  </script>
   {% include scripts.html %}
