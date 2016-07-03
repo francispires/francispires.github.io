@@ -54,6 +54,8 @@
         var a = document.getElementById("tree");
         // Get the SVG document inside the Object tag
         var svgDoc = a.contentDocument;
+        var baseInterval = 250;
+        var i = 1;
         $.each(progresso, function (name, value) {
           setTimeout(function () {
             // Get one of the SVG items by className;
@@ -61,7 +63,7 @@
             // Set the colour to something else
             var c = colors['C'+$(svgItem).attr('class')[1]]
             $(svgItem).attr('fill',c.iluminate(value?-50:50));
-          },2500)            
+          },baseInterval*i++)            
         });
       }
       var clearProgresso = function () {
