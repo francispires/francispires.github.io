@@ -28,7 +28,7 @@ var updateColors = function () {
   var a = document.getElementById("tree");
   // Get the SVG document inside the Object tag
   var svgDoc = a.contentDocument;
-  status.each(function(leave){
+  $(status).each(function(leave){
       if (leave) {
           // Get one of the SVG items by ID;
           var svgItem = svgDoc.getElementsByClassName('l11');
