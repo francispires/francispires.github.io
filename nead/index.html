@@ -10,16 +10,41 @@
         Your browser does not support SVG
     </object>
     <script type="text/javascript">
+    fill: ;
 
+  var colors = [
+    //C1:'rgb(137, 176, 232)',
+    //C2:'rgb(238, 86, 86)',
+    //C3:'rgb(174, 218, 140)'
+    C1:'rgb(87, 126, 182)',
+    C2:'rgb(188, 36, 36)',
+    C3:'rgb(124, 168, 90)'
+  ]
+  var status = [
+    L1:[l11:0,l12:0,l13:0,l14:0,l15:0,l16:0,l17:0],
+    L2:[l21:0,l22:0,l23:0,l24:0,l25:0,l26:0,l27:0],
+    L3:[l31:0,l32:0,l33:0,l34:0,l35:0,l36:0,l37:0]
+  ];
+var updateColors = function () {
+  // Get the Object by ID
+  var a = document.getElementById("tree");
+  // Get the SVG document inside the Object tag
+  var svgDoc = a.contentDocument;
+  status.each(function(){
+    $(this).each(function (leave) {
+      if (leave) {
+          // Get one of the SVG items by ID;
+          var svgItem = svgDoc.getElementsByClassName('l11');
+          // Set the colour to something else
+          $(svgItem).attr('fill','lime')
+          $(this).attr('fill',colors['C'+$(this).attr('class')[1]]);
+      }
+    })
+  })
+
+}
     window.onload=function() {
-      // Get the Object by ID
-      var a = document.getElementById("tree");
-      // Get the SVG document inside the Object tag
-      var svgDoc = a.contentDocument;
-      // Get one of the SVG items by ID;
-      var svgItem = svgDoc.getElementsByClassName('l11');
-      // Set the colour to something else
-      svgItem.setAttribute("fill", "lime");
+
 };
 
     </script>
