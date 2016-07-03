@@ -10,53 +10,36 @@
         Your browser does not support SVG
     </object>
     <script type="text/javascript">
-  var colors = [
-    //C1:'rgb(137, 176, 232)',
-    //C2:'rgb(238, 86, 86)',
-    //C3:'rgb(174, 218, 140)'
-    {C1:'rgb(87, 126, 182)'},
-    {C2:'rgb(188, 36, 36)'},
-    {C3:'rgb(124, 168, 90)'}
-  ]
-var s = [
-      {
-        "name": "Jane Doe",
-        "phone": "888-555-1212",
-        "relationship": "spouse"
-      },
-      {
-        "name": "Justin Doe",
-        "phone": "877-123-1212",
-        "relationship": "parent"
+    var colors = {
+        //C1:'rgb(137, 176, 232)',
+        //C2:'rgb(238, 86, 86)',
+        //C3:'rgb(174, 218, 140)'
+        "C1":'rgb(87, 126, 182)',
+        "C2":'rgb(188, 36, 36)',
+        "C3":'rgb(124, 168, 90)'
       }
-    ]
-
-  var status = [
-    {l11:0},{l12:0},{l13:0},{l14:0},{l15:0},{l16:0},{l17:0},
-    {l21:0},{l22:0},{l23:0},{l24:0},{l25:0},{l26:0},{l27:0},
-    {l31:0},{l32:0},{l33:0},{l34:0},{l35:0},{l36:0},{l37:0}
-  ];
-var updateColors = function () {
-  // Get the Object by ID
-  var a = document.getElementById("tree");
-  // Get the SVG document inside the Object tag
-  var svgDoc = a.contentDocument;
-  $(status).each(function(leave){
-      if (leave) {
-          // Get one of the SVG items by ID;
-          var svgItem = svgDoc.getElementsByClassName('l11');
-          // Set the colour to something else
-          $(svgItem).attr('fill','lime')
-          $(this).attr('fill',colors['C'+$(this).attr('class')[1]]);
+      var status = [
+        {"l11": false},{"l12": true},{"l13": false},{"l14": false},{"l15": false},{"l16": false},{"l17": false},
+        {"l21": false},{"l22": true},{"l23": false},{"l24": false},{"l25": false},{"l26": false},{"l27": false},
+        {"l31": false},{"l32": true},{"l33": false},{"l34": false},{"l35": false},{"l36": false},{"l37": false}
+      ];
+      var updateColors = function () {
+        // Get the Object by ID
+        var a = document.getElementById("tree");
+        // Get the SVG document inside the Object tag
+        var svgDoc = a.contentDocument;
+        $.each(status, function () {
+          $.each(this, function (name, value) {
+            if (value) {
+              // Get one of the SVG items by className;
+              var svgItem = svgDoc.getElementsByClassName(name);
+              // Set the colour to something else
+              var c = colors['C'+$(svgItem).attr('class')[1]]
+              $(svgItem).attr('fill',c);
+            }
+          });
+        });
       }
-
-  })
-
-}
-    window.onload=function() {
-
-};
-
     </script>
   </body>
 </html>
