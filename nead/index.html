@@ -45,16 +45,14 @@
         var a = document.getElementById("tree");
         // Get the SVG document inside the Object tag
         var svgDoc = a.contentDocument;
-        $.each(progresso, function () {
-          $.each(this, function (name, value) {
-            if (value) {
-              // Get one of the SVG items by className;
-              var svgItem = svgDoc.getElementsByClassName(name);
-              // Set the colour to something else
-              var c = colors['C'+$(svgItem).attr('class')[1]]
-              $(svgItem).attr('fill',c);
-            }
-          });
+        $.each(this, function (name, value) {
+          if (value) {
+            // Get one of the SVG items by className;
+            var svgItem = svgDoc.getElementsByClassName(name);
+            // Set the colour to something else
+            var c = colors['C'+$(svgItem).attr('class')[1]]
+            $(svgItem).attr('fill',c);
+          }
         });
       }
     </script>
