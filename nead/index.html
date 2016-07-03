@@ -45,7 +45,7 @@
         var a = document.getElementById("tree");
         // Get the SVG document inside the Object tag
         var svgDoc = a.contentDocument;
-        $.each(this, function (name, value) {
+        $.each(progresso, function (name, value) {
           if (value) {
             // Get one of the SVG items by className;
             var svgItem = svgDoc.getElementsByClassName(name);
