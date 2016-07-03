@@ -10,6 +10,15 @@
         Your browser does not support SVG
     </object>
     <script type="text/javascript">
+    String.prototype.iluminate = function (amt) {
+      var rgb = this.replace('rgb(','').replace(')','');
+      var vs = rgb.split(',');
+      for (var i = 0; i < vs.length; i++) {
+        vs[i] = Number(vs[i]+amt);
+        vs[i] = vs[i]>255?255:(vs[i]<0?0:vs[i]);
+      }
+      return "rgb("+vs.join(",")+")";
+    };
     var colors = {
         "C1":"rgb(87, 126, 182)",
         "C2":"rgb(188, 36, 36)",
@@ -46,13 +55,11 @@
         // Get the SVG document inside the Object tag
         var svgDoc = a.contentDocument;
         $.each(progresso, function (name, value) {
-          if (value) {
             // Get one of the SVG items by className;
             var svgItem = svgDoc.getElementsByClassName(name);
             // Set the colour to something else
             var c = colors['C'+$(svgItem).attr('class')[1]]
-            $(svgItem).attr('fill',c);
-          }
+            $(svgItem).attr('fill',c.iluminate(value?-50:50));
         });
       }
     </script>
