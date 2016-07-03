@@ -55,11 +55,13 @@
         // Get the SVG document inside the Object tag
         var svgDoc = a.contentDocument;
         $.each(progresso, function (name, value) {
+          setTimeout(function () {
             // Get one of the SVG items by className;
             var svgItem = svgDoc.getElementsByClassName(name);
             // Set the colour to something else
             var c = colors['C'+$(svgItem).attr('class')[1]]
             $(svgItem).attr('fill',c.iluminate(value?-50:50));
+          },500)            
         });
       }
       var clearProgresso = function () {
