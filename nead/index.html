@@ -62,6 +62,18 @@
             $(svgItem).attr('fill',c.iluminate(value?-50:50));
         });
       }
+      var clearProgresso = function () {
+        $.each(progresso,function(p,v){
+            progresso[p]="";
+        });
+        updateColors();
+      }
+      var completeProgresso = function () {
+        $.each(progresso,function(p,v){
+            progresso[p]="1";
+        });
+        updateColors();
+      }
     </script>
   </body>
 </html>
