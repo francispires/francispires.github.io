@@ -14,7 +14,7 @@
       var rgb = this.replace('rgb(','').replace(')','');
       var vs = rgb.split(',');
       for (var i = 0; i < vs.length; i++) {
-        vs[i] = Number(vs[i]+amt);
+        vs[i] = Number(Number(vs[i])+amt);
         vs[i] = vs[i]>255?255:(vs[i]<0?0:vs[i]);
       }
       return "rgb("+vs.join(",")+")";
