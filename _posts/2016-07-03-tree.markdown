@@ -7,7 +7,7 @@ imgurl: /img/portfolio/9.jpg
 subtitle: Manipulando imagens svg com javascript
 commentIssueId: 1
 ---
-<object type="image/svg+xml" data="tree_.svg">
+<object type="image/svg+xml" data="/img/portfolio/tree_.svg">
     Your browser does not support SVG
 </object>
-<img src="https://rawgithub.com/potherca/StackOverflow/gh-pages/question.13808020.include-an-svg-hosted-on-github-in-markdown/controllers_brief.svg">
+<img src="/img/portfolio/tree_.svg">
