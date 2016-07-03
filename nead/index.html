@@ -6,14 +6,22 @@
     <title>SVG Test</title>
   </head>
   <body>
-    <object type="image/svg+xml" data="tree_.svg">
+    <object id="tree" type="image/svg+xml" data="tree_.svg">
         Your browser does not support SVG
     </object>
     <script type="text/javascript">
 
-      var svgDoc = $("object")[0].contentDocument;
-      $('l11', svgDoc).css('fill', 'red');
-    
+    window.onload=function() {
+      // Get the Object by ID
+      var a = document.getElementById("tree");
+      // Get the SVG document inside the Object tag
+      var svgDoc = a.contentDocument;
+      // Get one of the SVG items by ID;
+      var svgItem = svgDoc.getElementsByClassName('l11');
+      // Set the colour to something else
+      svgItem.setAttribute("fill", "lime");
+};
+
     </script>
   </body>
 </html>
