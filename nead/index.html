@@ -61,6 +61,9 @@
           setTimeout(function () {
             // Get one of the SVG items by className;
             var svgItem = svgDoc.getElementsByClassName(name);
+            $(svgItem).click(function(){
+              alert('folhaClicada');
+            })
             // Set the colour to something else
             var c = colors['C'+$(svgItem).attr('class')[1]]
             $(svgItem).attr('fill',c.iluminate(value?-50:50));
@@ -79,11 +82,7 @@
         });
         updateColors();
       }
-      setInterval(completeProgresso,10000);
-      setTimeout(function(){
-        setInterval(clearProgresso,5000);  
-      },1)
-      
+      setInterval(completeProgresso,2);
     </script>
   </body>
 </html>
