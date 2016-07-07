@@ -57,13 +57,16 @@
         var svgDoc = a.contentDocument;
         var baseInterval = 200;
         var i = 1;
+        var svgItem = svgDoc.getElementsByClassName('l21');
+        $(svgItem).click(function(){
+          alert('ini');
+          var p = GetPlayer();
+          alert(p.GetVar("ex1"));
+        });
         $.each(progresso, function (name, value) {
           setTimeout(function () {
             // Get one of the SVG items by className;
             var svgItem = svgDoc.getElementsByClassName(name);
-            $(svgItem).click(function(){
-              alert('folhaClicada');
-            })
             // Set the colour to something else
             var c = colors['C'+$(svgItem).attr('class')[1]]
             $(svgItem).attr('fill',c.iluminate(value?-50:50));
