@@ -121,7 +121,7 @@ botaoBuscar.addEventListener("click",function(){
 	xhr.addEventListener("load", function(){
 		console.log(xhr.responseText);
 	})
-	xhr.send({"nome": "Fabio", "facebookID": 102345, "IP": "200.123.123.123","weight": {"sexo":1,"horotadia":0,"frutadia":0,"carnegordura":1, "atividade":0,"hiptertensao":1,"diabetes":1}});
+	xhr.send(JSON.stringify({"nome": "Fabio", "facebookID": 102345, "IP": "200.123.123.123","weight": {"sexo":1,"horotadia":0,"frutadia":0,"carnegordura":1, "atividade":0,"hiptertensao":1,"diabetes":1}}));
 	
 });
 
