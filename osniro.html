@@ -11,8 +11,8 @@
 <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 
 </head>
-  <form class="form-horizontal" role="form" align="center" method="POST" name="myform" onsubmit="return submitForm(this);">	  
 <body>
+  <form class="form-horizontal" role="form" align="center" method="POST" name="myform" onsubmit="return submitForm(this);">
 	<div class="container">
 	 	<div class="column">
 	 	<br><br>
@@ -27,7 +27,7 @@
 			<br>
 		 	<div class="row">
 		 		<div class="col-sm-3">Nome e Sobrenome</div>
-		  		<div class="col-sm-6"><input type="text" class="form-control" id="usr" name="txtNome"></div>
+		  		<div class="col-sm-6"><input type="text" class="form-control" id="usr" name="nome"></div>
 			</div>             
 			<br>
 		  	<div class="row">
@@ -35,8 +35,8 @@
 		  		<div class="col-sm-3"><input type="text" class="form-control" id="usr">
 		  		</div>
 		  		<div class="col-sm-4">
-					<label class="radio-inline"> <input type="radio" name="sexo" id="sexoMasc" value="Marculino" name="rbSexoMasc"> Masculino </label>
-	            	<label class="radio-inline"> <input type="radio" name="sexo" id="sexoFemi" value="Feminino" name="rbSexoFem"> Feminino </label>
+					<label class="radio-inline"> <input type="radio" name="sexo" id="sexoMasc" value="Marculino"> Masculino </label>
+	            	<label class="radio-inline"> <input type="radio" name="sexo" id="sexoFemi" value="Feminino"> Feminino </label>
 	            	<br><br>
 	            </div>
 			</div>
@@ -106,55 +106,29 @@
 
 		</div>
   	</div>
+	</form>
 </body>
 
 <script type="text/javascript">
 
 var botaoBuscar = document.querySelector("#botaoBuscar");
 botaoBuscar.addEventListener("click",function(){
-	console.log("buscando");
 
-	let url = 'http://ml-api.lifeordie.me:80/helth/api/v1.0/score_cholesterol';
-	let xhr = new XMLHttpRequest();
-	xhr.open('POST',url,true);
-
-	xhr.addEventListener("load", function(){
-		console.log(xhr.responseText);
-	})
-	xhr.send(JSON.stringify({"nome": "Fabio", "facebookID": 102345, "IP": "200.123.123.123","weight": {"sexo":1,"horotadia":0,"frutadia":0,"carnegordura":1, "atividade":0,"hiptertensao":1,"diabetes":1}}));
+	var data = {"nome": "Fabio", "facebookID": 102345, "IP": "200.123.123.123","weight": {"sexo":1,"horotadia":0,"frutadia":0,"carnegordura":1, "atividade":0,"hiptertensao":1,"diabetes":1}};
 	
+	
+	console.log("buscando");
+	$.ajax('http://ml-api.lifeordie.me:80/helth/api/v1.0/score_cholesterol',data,function(res){
+		console.log(res);
+	});
 });
 
 function buscarInfo(){
-	let inputNome = document.querySelector('input[name=txtNome]');
-	let nome = inputNome.value;
-
-	let url = 'http://ml-api.lifeordie.me:80/helth/api/v1.0/score_cholesterol';
-	let xhr = new XMLHttpRequest();
-	xhr.open('POST',url,true);
-
-	xhr.onreadystatechange = function() {
-		if(xhr.readState == 4){
-			if(xhr.status == 200){
-				var json = JSON.parse(xhr.responseText);
-				console.log(JSON.parse(xhr.responseText));
-			}
-		}
-		
-		
-	}
-	var data = JSON.stringify({"nome": "Fabio", "facebookID": 102345, "IP": "200.123.123.123","weight": {"sexo":1,"horotadia":0,"frutadia":0,"carnegordura":1, "atividade":0,"hiptertensao":1,"diabetes":1}});
-	xhr.send(data);
-
+	
 }
 
 function submitForm(oFormElement)
 {
-  var xhr = new XMLHttpRequest();
-  xhr.onload = function(){ alert (xhr.responseText); }
-  xhr.open ('GET', 'http://ml-api.lifeordie.me:80/helth/api/v1.0/score_cholesterol', true);
-  xhr.send (new FormData (oFormElement));
-  return false; // Markus had to return true
 }
 </script>
 
