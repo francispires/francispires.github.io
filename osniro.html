@@ -1,0 +1,135 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>lifeordie.me</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
+</head>
+<body>
+  <form class="form-horizontal" role="form" align="center" method="POST" name="myform" onsubmit="return submitForm(this);">
+	<div class="container">
+	 	<div class="column">
+	 	<br><br>
+	 		 <div class="row">
+		 		<div class="col-sm-10">
+		 		<img src="Captura de Tela 2017-06-11 às 4.15.33 PM.png" class="img-responsive" style="margin:0 auto;"/>
+		 		</div>
+			</div> 
+			<div class="row">
+		 		<div class="col-sm-10" align="center" ><p><h4>Bora verificar sua saude!</h4></p></div>
+			</div> 
+			<br>
+		 	<div class="row">
+		 		<div class="col-sm-3">Nome e Sobrenome</div>
+		  		<div class="col-sm-6"><input type="text" class="form-control" id="usr" name="nome"></div>
+			</div>             
+			<br>
+		  	<div class="row">
+		 		<div class="col-sm-3">Idade</div>
+		  		<div class="col-sm-3"><input type="text" class="form-control" id="usr">
+		  		</div>
+		  		<div class="col-sm-4">
+					<label class="radio-inline"> <input type="radio" name="sexo" id="sexoMasc" value="Marculino"> Masculino </label>
+	            	<label class="radio-inline"> <input type="radio" name="sexo" id="sexoFemi" value="Feminino"> Feminino </label>
+	            	<br><br>
+	            </div>
+			</div>
+			<div class="row">
+		 		<div class="col-sm-3">Peso</div>
+		  		<div class="col-sm-2"><input type="text" class="form-control" id="usr" name="txtPeso">
+		  		</div>
+		 		<div class="col-sm-1">Altura</div>
+		  		<div class="col-sm-3"><input type="text" class="form-control" id="usr" name="txtAltura">
+		  		</div>			
+			</div>
+			<br><br>
+			<div class="row">
+		 		<div class="col-sm-6">Tem diagnóstico de Hipertensão?</div>
+		  		<div class="col-sm-2"><input data-toggle="toggle" data-onstyle="success" data-on="Sim" data-offstyle="warning" data-off="Não" type="checkbox" name="tgHipertensao">
+		  		</div>
+			</div>
+			<br>
+			<div class="row">
+		 		<div class="col-sm-6">Tem diagnóstico de Diabetes?</div>
+		  		<div class="col-sm-2"><input data-toggle="toggle" data-onstyle="success" data-on="Sim" data-offstyle="warning" data-off="Não" type="checkbox" name="tgDiabetes">
+		  		</div>
+			</div>
+			<br>
+			<div class="row">
+		 		<div class="col-sm-6">Quantas hortaliças por semana?</div>
+		  		<div class="col-sm-6">
+		  			<label class="radio-inline"> <input type="radio" name="hortalic" id="hortalic0" value="0"> 0 </label>
+		  			<label class="radio-inline"> <input type="radio" name="hortalic" id="hortalic0" value="1"> 1 </label>
+		  			<label class="radio-inline"> <input type="radio" name="hortalic" id="hortalic0" value="2"> 2 </label>
+		  			<label class="radio-inline"> <input type="radio" name="hortalic" id="hortalic0" value="3"> 3 </label>
+		  			<label class="radio-inline"> <input type="radio" name="hortalic" id="hortalic0" value="4"> 4 ou + </label>
+		  		</div>
+		  	</div>
+		  	<br>
+			<div class="row">
+	 			<div class="col-sm-6">Quantas frutas ou sucos naturais por dia?</div>
+	  			<div class="col-sm-6">
+		  			<label class="radio-inline"> <input type="radio" name="fruit" id="fruit0" value="0"> 0 </label>
+		  			<label class="radio-inline"> <input type="radio" name="fruit" id="fruit0" value="1"> 1 </label>
+		  			<label class="radio-inline"> <input type="radio" name="fruit" id="fruit0" value="2"> 2 </label>
+		  			<label class="radio-inline"> <input type="radio" name="fruit" id="fruit0" value="3"> 3 ou + </label>
+		  		</div>
+	  		</div>
+	  		<br>
+			<div class="row">
+		 		<div class="col-sm-6">Come carne com gordura?</div>
+		  		<div class="col-sm-6"><input data-toggle="toggle" data-onstyle="success" data-on="Sim" data-offstyle="warning" data-off="Não" type="checkbox" name="tgCarneGord">
+		  		</div>
+			</div>
+			<br>
+			<div class="row">
+		 		<div class="col-sm-6">Pratica atividade física?</div>
+		 		<div class="col-sm-6">
+		  		<input data-toggle="toggle" data-onstyle="success" data-on="Sim" data-offstyle="warning" data-off="Não" type="checkbox" name="tgAtivF">
+		  		</div>
+			</div>
+			<br><br>
+			<div class="row">
+		 		<div align="right">
+					 <button type="button" class="btn btn-success" id="botaoBuscar" >Submeter!</button>
+					 <input value="post request" type="submit"  >
+		 		</div>
+		 		<br>
+		 		<br>
+		 	</div>
+
+		</div>
+  	</div>
+	</form>
+</body>
+
+<script type="text/javascript">
+
+var botaoBuscar = document.querySelector("#botaoBuscar");
+botaoBuscar.addEventListener("click",function(){
+
+	var data = {"nome": "Fabio", "facebookID": 102345, "IP": "200.123.123.123","weight": {"sexo":1,"horotadia":0,"frutadia":0,"carnegordura":1, "atividade":0,"hiptertensao":1,"diabetes":1}};
+	
+	
+	console.log("buscando");
+	$.ajax('http://ml-api.lifeordie.me:80/helth/api/v1.0/score_cholesterol',data,function(res){
+		console.log(res);
+	});
+});
+
+function buscarInfo(){
+	
+}
+
+function submitForm(oFormElement)
+{
+}
+</script>
+
+</html> 
