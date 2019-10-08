@@ -1,92 +1,175 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
-    <title>SVG Test</title>
-  </head>
-  <body>
-    <object id="tree" type="image/svg+xml" data="arvore.svg">
-        Your browser does not support SVG
-    </object>
-    <script type="text/javascript">
-    document.domain = "nead.fia.com.br";
-    String.prototype.iluminate = function (amt) {
-      var rgb = this.replace('rgb(','').replace(')','');
-      var vs = rgb.split(',');
-      for (var i = 0; i < vs.length; i++) {
-        vs[i] = Number(Number(vs[i])+amt);
-        vs[i] = vs[i]>255?255:(vs[i]<0?0:vs[i]);
-      }
-      return "rgb("+vs.join(",")+")";
-    };
-    var colors = {
-        "C1":"rgb(87, 126, 182)",
-        "C2":"rgb(188, 36, 36)",
-        "C3":"rgb(124, 168, 90)"
-    }
-      var progresso = {
-        "l11": "",
-        "l12": "1",
-        "l13": "",
-        "l14": "",
-        "l15": "",
-        "l16": "",
-        "l17": "",
+<head>
+	<title></title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
+	<link rel="stylesheet" href="stepper.css"/>
+	<link rel="stylesheet" href="spinner.css"/>
+	<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+</head>
+<body>
+	<div class="container body-content">
+	    <div class="mx-auto col-md-6 col-sm-12 col-lg-6">
+	    	<nav class="navbar">
+		        <div class="container">
+		        	<div class="row">
+		        		<div class="col-6">
+		            		<img class="card-img-top" src="https://labfinprovarfia.com.br/wp-content/uploads/2019/03/logos-site.png" alt="">
+		            	</div>
+		            	<div class="col-6">
+		            		<div class="float-right">
+		            			<div class="progress-pie-chart" data-percent="43">
+								  <div class="ppc-progress">
+								    <div class="ppc-progress-fill" style="transform: rotate(154.8deg);"></div>
+								  </div>
+								  <div class="ppc-percents">
+								    <div class="pcc-percents-wrapper">
+								      <span>43%</span>
+								    </div>
+								  </div>
+								</div>
+		            		</div>
+		            	</div>
+		        	</div>
+		        </div>
+		    </nav>
+		    <div class="col-12 intro">
+	    		<p>Atribua uma nota para cada sentença.</p>
+	    		<p>As notas não podem se repetir.</p>
+	    		<br><br>
+	    		<p><strong>2. Quando estou aprendendo</strong></p>
+    		</div>
+    		<div class="questions">
+			    <div class="question">
+			    	<div class="item">
+			    		<span class="title">Eu ouço e vejo com cuidado</span>
+					    <div class="progress">
+					        <div class="circle first">
+					        	<span class="label">0</span>
+					        </div>
+					        <span class="bar"></span>
+					        <div class="circle">
+					            <span class="label">1</span>
+					        </div>
+					        <span class="bar"></span>
+					        <div class="circle">
+					            <span class="label">2</span>
+					        </div>
+					        <span class="bar"></span>
+					        <div class="circle">
+					            <span class="label">3</span>
+					        </div>
+					        <span class="bar"></span>
+					        <div class="circle">
+					            <span class="label">4</span>
+					        </div>
+					        <div class="square">
+					            <span class="label">4</span>
+					        </div>
+					        <input type="hidden" name="">
+					    </div>
+			    	</div>
+			    	<div class="item">
+			    		<span class="title">Confio em pensamento lógico</span>
+					    <div class="progress">
+					        <div class="circle first">
+					        	<span class="label">0</span>
+					        </div>
+					        <span class="bar"></span>
+					        <div class="circle">
+					            <span class="label">1</span>
+					        </div>
+					        <span class="bar"></span>
+					        <div class="circle">
+					            <span class="label">2</span>
+					        </div>
+					        <span class="bar"></span>
+					        <div class="circle">
+					            <span class="label">3</span>
+					        </div>
+					        <span class="bar"></span>
+					        <div class="circle">
+					            <span class="label">4</span>
+					        </div>
+					        <div class="square">
+					            <span class="label">4</span>
+					        </div>
+					        <input type="hidden" name="">
+					    </div>
+				    </div>
+				    <div class="item">
+			    		<span class="title">Confio nos meus sentimentos e intuição</span>
+					    <div class="progress">
+					        <div class="circle first">
+					        	<span class="label">0</span>
+					        </div>
+					        <span class="bar"></span>
+					        <div class="circle">
+					            <span class="label">1</span>
+					        </div>
+					        <span class="bar"></span>
+					        <div class="circle">
+					            <span class="label">2</span>
+					        </div>
+					        <span class="bar"></span>
+					        <div class="circle">
+					            <span class="label">3</span>
+					        </div>
+					        <span class="bar"></span>
+					        <div class="circle">
+					            <span class="label">4</span>
+					        </div>
+					        <div class="square">
+					            <span class="label">4</span>
+					        </div>
+					        <input type="hidden" name="">
+					    </div>
+				    </div>
+				    <div class="item">
+			    		<span class="title">Gosto de observar e ouvir</span>
+					    <div class="progress">
+					        <div class="circle first">
+					        	<span class="label">0</span>
+					        </div>
+					        <span class="bar"></span>
+					        <div class="circle">
+					            <span class="label">1</span>
+					        </div>
+					        <span class="bar"></span>
+					        <div class="circle">
+					            <span class="label">2</span>
+					        </div>
+					        <span class="bar"></span>
+					        <div class="circle">
+					            <span class="label">3</span>
+					        </div>
+					        <span class="bar"></span>
+					        <div class="circle">
+					            <span class="label">4</span>
+					        </div>
+					        <div class="square">
+					            <span class="label">4</span>
+					        </div>
+					        <input type="hidden" name="">
+					    </div>
+				    </div>
+			    </div>
+			</div>
+			<footer class="footer">
+			</footer>
+			<div class="buttons">
+			  	<button type="button" class="btn btn-lg">Voltar</button>
+				<button type="button" class="btn btn-secondary btn-lg go">Avançar</button>
+			</div>
+	    </div>
+	</div>
 
-        "l21": "",
-        "l22": "1",
-        "l23": "",
-        "l24": "",
-        "l25": "",
-        "l26": "",
-        "l27": "",
 
-        "l31": "",
-        "l32": "1",
-        "l33": "",
-        "l34": "",
-        "l35": "",
-        "l36": "",
-        "l37": ""
-      };
-      var updateColors = function () {
-        // Get the Object by ID
-        var a = document.getElementById("tree");
-        // Get the SVG document inside the Object tag
-        var svgDoc = a.contentDocument;
-        var svgItem = svgDoc.getElementsByClassName('l21');
-        $(svgItem).click(function(){
-          alert('ini');
-          var p = GetPlayer();
-          alert(p.GetVar("ex1"));
-        });
-        var baseInterval = 200;
-        var i = 1;
-        
-        $.each(progresso, function (name, value) {
-          setTimeout(function () {
-            // Get one of the SVG items by className;
-            var svgItem = svgDoc.getElementsByClassName(name);
-            // Set the colour to something else
-            var c = colors['C'+$(svgItem).attr('class')[1]]
-            $(svgItem).attr('fill',c.iluminate(value?-50:50));
-          },baseInterval*i++)
-        });
-      }
-      var clearProgresso = function () {
-        $.each(progresso,function(p,v){
-            progresso[p]="";
-        });
-        updateColors();
-      }
-      var completeProgresso = function () {
-        $.each(progresso,function(p,v){
-            progresso[p]="1";
-        });
-        updateColors();
-      }
-      setInterval(completeProgresso,2);
-    </script>
-  </body>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"
+        asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+        asp-fallback-test="window.jQuery"
+        crossorigin="anonymous"
+        integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT"></script>
+	<script src="stepper.js"></script>
+</body>
 </html>
