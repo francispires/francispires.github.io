@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<html lang="pt" style="height: 100%;">
+    <head>
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type"></meta>
+        <script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
+        <script src="tree.js"></script>
+        <style type="text/css">
+            #IntroText, #video {
+                z-index: 0;
+                left: -100px;
+                position: relative;
+            }
+            #video {
+                margin-top: 50px;
+            }
+            .tree{
+                width: 100%;
+            }
+        </style>
+        <title>Árvoro</title>
+    </head>
+    <body>
+        <div style="height:90%;width:100%">
+            <div style="width:60%;float: left;">
+                <div class="tree">
+                    <object data="tree.svg" id="tree" type="image/svg+xml" viewbox="0 0 20 10">
+                        Use um navegador mais moderno por favor
+                    </object>
+                </div>
+            </div>
+            <div style="width:40%;float: left;">
+                <div id="IntroText"></div>
+                <div id="video">
+                    <iframe src="https://www.youtube.com/embed/XGSy3_Czz8k?controls=0">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
