@@ -7,7 +7,11 @@ imgurl: /img/portfolio/7.jpg
 subtitle: Um novo aprendizado
 commentIssueId: 4
 ---
-Este final de semana eu fiz a primeira tentativa de montar minha caixa acústica, funcionou, mas pode melhorar.
+Desenvolvimento de plataformas de ensino completas e opensource com OpenEdx.
+
+Criação de X-Blocks para funcionalidades e integrações específicas, se as integrações existentes não forem suficienetes, normalmente elas são.
+
+
 
 
 [jekyll-docs]: http://jekyllrb.com/docs/home
