@@ -14,7 +14,7 @@
 
       // inicia a instância do checkout
       var checkout = new PagarMeCheckout.Checkout({
-        encryption_key: 'ak_live_z9IHfRYNEo45hiGlOWYpLeAyZaueiD',
+        encryption_key: 'ak_test_69QDFgEaJw6ryMqJHqqBQXdfQegFet',
         success: function(data) {
           console.log(data);
         },
@@ -28,13 +28,26 @@
 
       // Obs.: é necessário passar os valores boolean como string
       checkout.open({
-        amount: 100,
-        buttonText: 'Pagar',
-        buttonClass: 'botao-pagamento',
-        customerData: 'false',
+        paymentButtonText: 'Finalizar',
+        amount: 10000,
+        maxInstallments: 12,
+        defaultInstallment: 1,
+        customerData: 'true',
         createToken: 'true',
-        paymentMethods: 'credit_card'
-      });
+        paymentMethods: 'boleto,credit_card',
+        uiColor: '#1ea51c',
+        creditCardDiscountPercentage:15,
+        pixExpirationDate:'2021-12-31'
+        boletoDiscountPercentage: 0,
+        boletoExpirationDate: '12/12/2020',
+        postbackUrl: "postback-cool.com",
+        items: [{
+          id: '1',
+          title: 'ItemZero',
+          unit_price: 10000,
+          quantity: 1,
+          tangible: 'false'
+        });
     });
     </script>
   </body>
