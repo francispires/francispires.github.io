@@ -28,27 +28,12 @@
 
       // Obs.: é necessário passar os valores boolean como string
       checkout.open({
-        amount: 8000,
+        amount: 100,
         buttonText: 'Pagar',
         buttonClass: 'botao-pagamento',
         customerData: 'false',
         createToken: 'true',
-        paymentMethods: 'credit_card',
-        customer: {
-          external_id: '#123456789',
-          name: 'Fulano',
-          type: 'individual',
-          country: 'br',
-          email: 'fulano@email.com',
-          documents: [
-            {
-              type: 'cpf',
-              number: '71404665560',
-            },
-          ],
-          phone_numbers: ['+5511999998888', '+5511888889999'],
-          birthday: '1985-01-01'
-        }
+        paymentMethods: 'credit_card'
       });
     });
     </script>
