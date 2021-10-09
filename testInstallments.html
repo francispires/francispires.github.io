@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+<div id="details">
+  <input id="cardholder-name" type="text" placeholder="Cardholder name">
+  <!-- placeholder for Elements -->
+  <form id="payment-form">
+    <div id="card-element"></div>
+    <button id="card-button">Next</button>
+  </form>
+</div>
+<div id="plans" hidden>
+  <form id="installment-plan-form" >
+    <label><input id="immediate-plan" type="radio" name="installment_plan" value="-1" />Immediate</label>
+    <input id="payment-intent-id" type="hidden" />
+  </form>
+  <button id="confirm-button">Confirm Payment</button>
+</div>
+
+<div id="result" hidden>
+  <p id="status-message"></p>
+</div>
+<script type="text/javascript">
+	var stripe = Stripe('pk_test_51H7W7mIOGXhGaYkOU3jVb18dgQ11Sr0mAr9HcAzSumyyTB5Yztqm63QO0iqiRB9t2x3ZdZXPfegonRU6mi2A8lMw00bHo3sBNo');
+
+var elements = stripe.elements();
+var cardElement = elements.create('card');
+cardElement.mount('#card-element');
+var cardholderName = document.getElementById('cardholder-name');
+var form = document.getElementById('payment-form');
+
+form.addEventListener('submit', function(ev) {
+  ev.preventDefault();
+  stripe.createPaymentMethod({
+    type: 'card',
+    card: cardElement,
+    billing_details: {name: cardholderName.value}
+  }).then(function(result) {
+    if (result.error) {
+      // Show error in payment form
+    } else {
+      // Otherwise send paymentMethod.id to your server (see Step 2)
+      fetch('/collect_details', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ payment_method_id: result.paymentMethod.id })
+      }).then(function(result) {
+        // Handle server response (see Step 3)
+        result.json().then(function(json) {
+          handleInstallmentPlans(json);
+        })
+      });
+    }
+  });
+});
+
+
+
+const confirmButton = document.getElementById('confirm-button');
+
+confirmButton.addEventListener('click', async (ev) => {
+  const selectedPlanIdx = selectPlanForm.installment_plan.value;
+  const selectedPlan = availablePlans[selectedPlanIdx];
+  const intentId = document.getElementById('payment-intent-id').value;
+  const response = await fetch('/confirm_payment', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      payment_intent_id: intentId,
+      selected_plan: selectedPlan,
+    }),
+  });
+
+  const responseJson = await response.json();
+
+  // Show success / error response.
+  document.getElementById('plans').hidden = true;
+  document.getElementById('result').hidden = false;
+
+  var message;
+  if (responseJson.status === "succeeded" && selectedPlan !== undefined) {
+    message = `Success! You made a charge with this plan:${
+      selectedPlan.count
+    } ${selectedPlan.interval}`;
+  } else if (responseJson.status === "succeeded") {
+    message = "Success! You paid immediately!";
+  } else {
+    message = "Uh oh! Something went wrong";
+  }
+
+  document.getElementById("status-message").innerText = message;
+});
+
+
+</script>
+</body>
+</html>
