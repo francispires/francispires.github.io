@@ -5,52 +5,46 @@
     <script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-
+    <title>Juliana</title>
 </head>
 <body>
-<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-    <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home"
-                type="button" role="tab" aria-controls="pills-home" aria-selected="true">Modelo 1
-        </button>
-    </li>
-    <li class="nav-item" role="presentation">
-        <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile"
-                type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Modelo 2
-        </button>
-    </li>
-    <li class="nav-item" role="presentation">
-        <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact"
-                type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Modelo 3
-        </button>
-    </li>
-    <li class="nav-item" role="presentation">
-        <button class="nav-link" id="pills-asdf-tab" data-bs-toggle="pill" data-bs-target="#pills-asdf"
-                type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Modelo 4
-        </button>
-    </li>
-</ul>
-<div class="tab-content" id="pills-tabContent">
-    <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab"
-         tabindex="0">
-        <iframe src="https://demo.templatemonster.com/demo/297892.html"
-                style="width: 95vw; height: 90vh; border: none;"></iframe>
-    </div>
-    <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
-        <iframe src="https://demo.templatemonster.com/demo/84026.html"
-                style="width: 95vw; height: 90vh; border: none;"></iframe>
-    </div>
-    <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab" tabindex="0">
-        <iframe src="https://demo.templatemonster.com/demo/65156.html"
-                style="width: 95vw; height: 90vh; border: none;"></iframe>
-    </div>
-    <div class="tab-pane fade" id="pills-asdf" role="tabpanel" aria-labelledby="pills-asdf-tab" tabindex="0">
-        <iframe src="https://demo.templatemonster.com/demo/251012.html"
-                style="width: 95vw; height: 90vh; border: none;"></iframe>
-    </div>
-</div>
+
+<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist"></ul>
+<div class="tab-content" id="pills-tabContent"></div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
         crossorigin="anonymous"></script>
+
+<script>
+    const urls = [
+        "https://ld-magento.template-help.com/magento_62105",
+        "https://livedemo00.template-help.com/joomla_51958",
+        "https://livedemo00.template-help.com/wordpress_51357",
+        "https://ld-wp.template-help.com/wordpress_64127",
+        "https://livedemo00.template-help.com/wordpress_54041",
+        "https://livedemo00.template-help.com/wordpress_52437",
+        "https://livedemo00.template-help.com/wordpress_54036",
+        "https://livedemo00.template-help.com/wordpress_47011",
+        "https://demo.themexbd.com/wpt/galenical/",
+        "https://demo.themexbd.com/wpt/hmadi/",
+        "https://itrangpur.com/html/hmadi/",
+        "https://demos.coderplace.com/wp/WP02/WP02027"
+    ];
+
+    urls.forEach((url, i) => {
+        $('#pills-tab').append(`<li class="nav-item" role="presentation">
+            <button class="nav-link" id="pills-m-${i}-tab" data-bs-toggle="pill" data-bs-target="#pills-m-${i}"
+                    type="button" role="tab" aria-controls="pills-m-${i}" aria-selected="false">Modelo ${i+1}
+            </button>`);
+        $('#pills-tabContent').append(`
+            <div class="tab-pane fade" id="pills-m-${i}" role="tabpanel" aria-labelledby="pills-m-${i}-tab" tabindex="0">
+            <iframe src="${url}" style="width: 95vw; height: 90vh; border: none;"></iframe>
+            </div>`);
+    });
+    $(document).ready(function () {
+        $('#pills-m-0-tab').click();
+    });
+</script>
 </body>
 </html>
