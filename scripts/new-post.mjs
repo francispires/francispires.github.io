@@ -35,17 +35,20 @@ const ROOT     = join(__dirname, '..');
 const BLOG_DIR = join(ROOT, 'src/content/blog');
 const IMG_DIR  = join(ROOT, 'public/img/posts');
 
-const CATEGORIES = [
-  'csharp',
-  'typescript',
-  'data-engineering',
-  'python',
-  'sql',
-  'javascript',
-  'devops',
-  'math',
-  'misc',
-];
+const CONFIG_PATH = join(ROOT, 'src/content/config.ts');
+
+function loadCategories() {
+  const src = readFileSync(CONFIG_PATH, 'utf8');
+  const match = src.match(/\.enum\(\[([^\]]+)\]\)/);
+  if (!match) return ['misc'];
+  return match[1].split(',').map(s => s.trim().replace(/'/g, ''));
+}
+
+function addCategoryToSchema(newCat) {
+  let src = readFileSync(CONFIG_PATH, 'utf8');
+  src = src.replace(/(\.enum\(\[[^\]]+)(\]\))/, `$1, '${newCat}'$2`);
+  writeFileSync(CONFIG_PATH, src);
+}
 
 // ─── CLI args ────────────────────────────────────────────────────────────────
 
@@ -104,13 +107,31 @@ async function askMissing(args) {
   }
 
   if (!args.category) {
+    const cats = loadCategories();
     const { category } = await prompts({
       type: 'select',
       name: 'category',
       message: 'Category:',
-      choices: CATEGORIES.map(c => ({ title: c, value: c })),
+      choices: [
+        ...cats.map(c => ({ title: c, value: c })),
+        { title: '+ New category...', value: '__new__' },
+      ],
     }, { onCancel });
-    args.category = category;
+
+    if (category === '__new__') {
+      const { newSlug } = await prompts({
+        type: 'text',
+        name: 'newSlug',
+        message: 'Category slug (lowercase, hyphens only — e.g. "react", "asp-net"):',
+        validate: v => /^[a-z][a-z0-9-]*$/.test(v.trim()) || 'Use lowercase letters, numbers, hyphens only',
+      }, { onCancel });
+      const slug = newSlug.trim();
+      addCategoryToSchema(slug);
+      console.log(chalk.green(`  ✓ Added "${slug}" to src/content/config.ts`));
+      args.category = slug;
+    } else {
+      args.category = category;
+    }
   }
 
   if (!args.lang) {
