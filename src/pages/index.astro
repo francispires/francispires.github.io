@@ -11,18 +11,23 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .slice(0, 20);
 
 const skills = [
-  { name: 'Python',         pct: 85, color: 'var(--cyan)'  },
-  { name: 'SQL',            pct: 80, color: 'var(--green)' },
-  { name: 'Data Analysis',  pct: 82, color: 'var(--amber)' },
-  { name: 'JavaScript',     pct: 70, color: 'var(--cyan)'  },
-  { name: 'Git / DevOps',   pct: 65, color: 'var(--green)' },
-  { name: 'ML / AI',        pct: 55, color: 'var(--amber)' },
+  { name: 'C# / .NET Core',     pct: 99, color: 'var(--green)' },
+  { name: 'TypeScript',          pct: 95, color: 'var(--cyan)'  },
+  { name: 'React',               pct: 92, color: 'var(--cyan)'  },
+  { name: 'SQL / PostgreSQL',    pct: 90, color: 'var(--amber)' },
+  { name: 'Design Patterns/TDD', pct: 88, color: 'var(--green)' },
+  { name: 'JavaScript / Node',   pct: 85, color: 'var(--cyan)'  },
+  { name: 'Python',              pct: 82, color: 'var(--amber)' },
+  { name: 'Oracle',              pct: 78, color: 'var(--amber)' },
+  { name: 'SharePoint / M365',   pct: 75, color: 'var(--green)' },
+  { name: 'Vercel / DevOps',     pct: 70, color: 'var(--cyan)'  },
+  { name: 'ML / AI',             pct: 55, color: 'var(--amber)' },
 ];
 ---
 
 <BaseLayout
   title="Francis Pires"
-  description="Developer and data analyst. Building things with Python, SQL, and JavaScript."
+  description="C# specialist and software architect with 30 years of experience. Building web platforms with .NET Core, TypeScript, React, and Node.js."
 >
   <!-- Hero -->
   <section class="hero">
@@ -36,6 +41,22 @@ const skills = [
   ╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚══╝ ╚═════╝╚═╝╚══════╝</pre>
 
       <TypewriterHero />
+
+      <div class="hero-bio">
+        <span class="hb-prompt">$ cat ./intro.txt</span>
+        <p class="hb-output lang-en">
+          Full-stack developer &amp; software architect · 30 years of experience<br/>
+          C# / .NET Core · TypeScript · React · Node.js · Vercel<br/>
+          SQL (MSSQL · PostgreSQL · Oracle) · Python · SharePoint<br/>
+          Design Patterns · TDD · Clean Architecture
+        </p>
+        <p class="hb-output lang-pt">
+          Desenvolvedor full-stack &amp; arquiteto de software · 30 anos de experiência<br/>
+          C# / .NET Core · TypeScript · React · Node.js · Vercel<br/>
+          SQL (MSSQL · PostgreSQL · Oracle) · Python · SharePoint<br/>
+          Padrões de Projeto · TDD · Arquitetura Limpa
+        </p>
+      </div>
 
       <div class="hero-actions">
         <a href="/projects" class="hero-btn primary">$ ls ./projects</a>
@@ -118,6 +139,26 @@ const skills = [
     padding: 0;
   }
 
+  .hero-bio {
+    margin: 1.5rem 0 0.5rem;
+    font-size: 0.85rem;
+  }
+
+  .hb-prompt {
+    display: block;
+    color: var(--text-dim);
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .hb-output {
+    margin: 0;
+    padding-left: 1rem;
+    border-left: 2px solid var(--border);
+    color: var(--text);
+    line-height: 2;
+  }
+
   .hero-actions {
     display: flex;
     gap: 1rem;
@@ -182,12 +223,12 @@ const skills = [
 <script>
   function filterHomePosts() {
     const lang = localStorage.getItem('site-lang') || 'pt-BR';
-    const cards = document.querySelectorAll<HTMLElement>('#home-posts .post-card[data-post-lang]');
-    let shown = 0;
-    cards.forEach(card => {
-      const matches = card.dataset.postLang === lang && shown < 6;
-      card.style.display = matches ? '' : 'none';
-      if (matches) shown++;
+    const allCards = Array.from(document.querySelectorAll<HTMLElement>('#home-posts .post-card[data-post-lang]'));
+    const langCards = allCards.filter(c => c.dataset.postLang === lang);
+    // Fall back to all posts if no posts exist in the current language yet
+    const toShow = langCards.length > 0 ? langCards.slice(0, 6) : allCards.slice(0, 6);
+    allCards.forEach(card => {
+      card.style.display = toShow.includes(card) ? '' : 'none';
     });
   }
 

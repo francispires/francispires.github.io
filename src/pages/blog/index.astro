@@ -7,18 +7,24 @@ const allPosts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
 const categories = [...new Set(allPosts.map(p => p.data.category))].sort();
+
+const catPt: Record<string, string> = {
+  'data-engineering': 'eng. dados',
+  'misc': 'outros',
+  'devops': 'devops',
+};
+function ptCat(cat: string) { return catPt[cat] ?? cat; }
 ---
 
 <BaseLayout
   title="Blog"
-  description="Articles on data engineering, Python, SQL, JavaScript, and more."
+  description="Articles on C#, .NET, TypeScript, React, data engineering, and more."
 >
   <div class="content-container page-wrap">
 
     <div class="page-header">
       <div class="section-header">
-        <span class="lang-en">blog</span>
-        <span class="lang-pt">blog</span>
+        <span>blog</span>
       </div>
       <div class="post-count">
         <span class="pd">$</span>
@@ -31,12 +37,15 @@ const categories = [...new Set(allPosts.map(p => p.data.category))].sort();
     </div>
 
     <div class="cat-filter">
-      <a href="/blog" class="cat-btn active" data-cat="all">
+      <button class="cat-btn active" data-cat="all">
         <span class="lang-en">all</span>
         <span class="lang-pt">todos</span>
-      </a>
+      </button>
       {categories.map(cat => (
-        <a href={`/blog/category/${cat}`} class="cat-btn" data-cat={cat}>{cat}</a>
+        <button class="cat-btn" data-cat={cat}>
+          <span class="lang-en">{cat}</span>
+          <span class="lang-pt">{ptCat(cat)}</span>
+        </button>
       ))}
     </div>
 
@@ -65,25 +74,39 @@ const categories = [...new Set(allPosts.map(p => p.data.category))].sort();
 </BaseLayout>
 
 <script>
+  let activeCat = 'all';
+
   function filterPosts() {
     const lang = localStorage.getItem('site-lang') || 'pt-BR';
-    const cards = document.querySelectorAll<HTMLElement>('.post-card[data-post-lang]');
+    const allCards = Array.from(document.querySelectorAll<HTMLElement>('.post-card[data-post-lang]'));
+    const langCards = allCards.filter(c => c.dataset.postLang === lang);
+    // Fall back to all posts when no posts in the current language yet
+    const langPool = langCards.length > 0 ? langCards : allCards;
+
     let visible = 0;
-    cards.forEach(card => {
-      const matches = card.dataset.postLang === lang;
-      card.style.display = matches ? '' : 'none';
-      if (matches) visible++;
+    allCards.forEach(card => {
+      const inPool = langPool.includes(card);
+      const matchesCat = activeCat === 'all' || card.dataset.category === activeCat;
+      const show = inPool && matchesCat;
+      card.style.display = show ? '' : 'none';
+      if (show) visible++;
     });
     const counter = document.getElementById('post-count');
     if (counter) counter.textContent = String(visible);
   }
 
+  document.querySelectorAll<HTMLElement>('.cat-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      activeCat = btn.dataset.cat || 'all';
+      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      filterPosts();
+    });
+  });
+
   filterPosts();
 
-  // Re-filter when language toggles
   document.documentElement.addEventListener('langchange', filterPosts);
-
-  // Also watch storage changes from other tabs
   window.addEventListener('storage', e => {
     if (e.key === 'site-lang') filterPosts();
   });
@@ -107,7 +130,11 @@ const categories = [...new Set(allPosts.map(p => p.data.category))].sort();
     border-radius: 3px;
     color: var(--text-muted);
     text-decoration: none;
+    background: none;
+    cursor: pointer;
+    font-family: var(--font-mono);
     transition: all 0.12s ease;
+    line-height: 1.6;
   }
 
   .cat-btn:hover,

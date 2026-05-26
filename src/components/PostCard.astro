@@ -13,7 +13,7 @@ const { slug, title, pubDate, category, lang } = Astro.props;
 const dateStr = pubDate.toISOString().split('T')[0];
 ---
 
-<a href={`/blog/${slug}`} class="post-card" data-post-lang={lang || 'en'}>
+<a href={`/blog/${slug}`} class="post-card" data-post-lang={lang || 'en'} data-category={category || ''}>
   <span class="pc-perms">drwxr-xr-x</span>
   <time class="pc-date" datetime={pubDate.toISOString()}>{dateStr}</time>
   <span class="pc-title">{title}</span>
