@@ -12,7 +12,7 @@ export async function getStaticPaths() {
 
 const { project } = Astro.props;
 const { Content } = await project.render();
-const { title, description, tech, url, github, image, imageAlt } = project.data;
+const { title, titlePt, description, descriptionPt, tech, url, github, image, imageAlt } = project.data;
 ---
 
 <BaseLayout title={title} description={description} image={image}>
@@ -25,8 +25,14 @@ const { title, description, tech, url, github, image, imageAlt } = project.data;
     </div>
 
     <header class="proj-header">
-      <h1>{title}</h1>
-      <p class="proj-desc">{description}</p>
+      <h1>
+        <span class="lang-en">{title}</span>
+        {titlePt && <span class="lang-pt">{titlePt}</span>}
+      </h1>
+      <p class="proj-desc">
+        <span class="lang-en">{description}</span>
+        {descriptionPt && <span class="lang-pt">{descriptionPt}</span>}
+      </p>
 
       <div class="proj-tech">
         {tech.map(t => <span class="tech-badge">{t}</span>)}
@@ -34,14 +40,10 @@ const { title, description, tech, url, github, image, imageAlt } = project.data;
 
       <div class="proj-links">
         {github && (
-          <a href={github} target="_blank" rel="noopener" class="proj-link">
-            [github →]
-          </a>
+          <a href={github} target="_blank" rel="noopener" class="proj-link">[github →]</a>
         )}
         {url && (
-          <a href={url} target="_blank" rel="noopener" class="proj-link">
-            [live →]
-          </a>
+          <a href={url} target="_blank" rel="noopener" class="proj-link">[live →]</a>
         )}
       </div>
     </header>
@@ -114,7 +116,7 @@ const { title, description, tech, url, github, image, imageAlt } = project.data;
 
   .post-body { color: var(--text); line-height: 1.85; }
   .post-body :global(h2) { margin-top: 2rem; margin-bottom: 0.75rem; color: var(--green); border-top: 1px solid var(--border); padding-top: 0.5rem; }
-  .post-body :global(p) { margin-bottom: 1rem; }
+  .post-body :global(p)  { margin-bottom: 1rem; }
   .post-body :global(ul) { padding-left: 1.5rem; margin-bottom: 1rem; }
   .post-body :global(li) { margin-bottom: 0.25rem; }
 </style>

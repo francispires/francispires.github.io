@@ -16,17 +16,25 @@ const others   = projects.filter(p => !p.data.featured);
 >
   <div class="container page-wrap">
 
-    <div class="section-header"><span>projects</span></div>
+    <div class="section-header">
+      <span class="lang-en">projects</span>
+      <span class="lang-pt">projetos</span>
+    </div>
 
     {featured.length > 0 && (
       <div class="proj-section">
-        <div class="ps-label">★ featured</div>
+        <div class="ps-label">
+          <span class="lang-en">★ featured</span>
+          <span class="lang-pt">★ destaque</span>
+        </div>
         <div class="projects-grid">
           {featured.map(p => (
             <ProjectCard
               slug={p.slug}
               title={p.data.title}
+              titlePt={p.data.titlePt}
               description={p.data.description}
+              descriptionPt={p.data.descriptionPt}
               tech={p.data.tech}
               featured={true}
             />
@@ -37,13 +45,20 @@ const others   = projects.filter(p => !p.data.featured);
 
     {others.length > 0 && (
       <div class="proj-section">
-        {featured.length > 0 && <div class="ps-label">◈ other projects</div>}
+        {featured.length > 0 && (
+          <div class="ps-label">
+            <span class="lang-en">◈ other projects</span>
+            <span class="lang-pt">◈ outros projetos</span>
+          </div>
+        )}
         <div class="projects-grid">
           {others.map(p => (
             <ProjectCard
               slug={p.slug}
               title={p.data.title}
+              titlePt={p.data.titlePt}
               description={p.data.description}
+              descriptionPt={p.data.descriptionPt}
               tech={p.data.tech}
             />
           ))}

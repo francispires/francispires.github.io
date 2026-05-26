@@ -2,20 +2,28 @@
 interface Props {
   slug: string;
   title: string;
+  titlePt?: string;
   description: string;
+  descriptionPt?: string;
   tech: string[];
   featured?: boolean;
 }
 
-const { slug, title, description, tech, featured = false } = Astro.props;
+const { slug, title, titlePt, description, descriptionPt, tech, featured = false } = Astro.props;
 ---
 
 <a href={`/projects/${slug}`} class={`project-card ${featured ? 'featured' : ''}`}>
   <div class="pc-header">
     <span class="pc-icon">{featured ? '★' : '◈'}</span>
-    <h3 class="pc-title">{title}</h3>
+    <h3 class="pc-title">
+      <span class="lang-en">{title}</span>
+      {titlePt && <span class="lang-pt">{titlePt}</span>}
+    </h3>
   </div>
-  <p class="pc-desc">{description}</p>
+  <p class="pc-desc">
+    <span class="lang-en">{description}</span>
+    {descriptionPt && <span class="lang-pt">{descriptionPt}</span>}
+  </p>
   <div class="pc-tech">
     {tech.map(t => <span class="tech-tag">{t}</span>)}
   </div>
