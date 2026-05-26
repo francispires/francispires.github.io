@@ -4,9 +4,9 @@ description: "Learn how to leverage C# and .NET for building robust ETL pipeline
 pubDate: 2026-05-26
 lang: en
 translationKey: net-for-data-engineers-using-c-for-etl-pipelines-and-data-processing
-category: misc
+category: csharp
 tags: ["dotnet", "csharp", "data-engineering", "etl"]
-draft: true
+draft: false
 heroImage: "/img/posts/net-for-data-engineers-using-c-for-etl-pipelines-and-data-processing.jpg"
 ---
 ## Why Consider .NET for Data Engineering?

@@ -8,11 +8,18 @@ const allPosts = (await getCollection('blog', ({ data }) => !data.draft))
 
 const categories = [...new Set(allPosts.map(p => p.data.category))].sort();
 
+const catEn: Record<string, string> = {
+  'data-engineering': 'data-eng',
+  'csharp': 'C#',
+  'typescript': 'TypeScript',
+};
 const catPt: Record<string, string> = {
   'data-engineering': 'eng. dados',
   'misc': 'outros',
-  'devops': 'devops',
+  'csharp': 'C#',
+  'typescript': 'TypeScript',
 };
+function enCat(cat: string) { return catEn[cat] ?? cat; }
 function ptCat(cat: string) { return catPt[cat] ?? cat; }
 ---
 
@@ -43,7 +50,7 @@ function ptCat(cat: string) { return catPt[cat] ?? cat; }
       </button>
       {categories.map(cat => (
         <button class="cat-btn" data-cat={cat}>
-          <span class="lang-en">{cat}</span>
+          <span class="lang-en">{enCat(cat)}</span>
           <span class="lang-pt">{ptCat(cat)}</span>
         </button>
       ))}

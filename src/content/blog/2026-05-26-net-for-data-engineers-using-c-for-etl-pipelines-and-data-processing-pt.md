@@ -4,9 +4,9 @@ description: "Aprenda a usar C# e .NET para construir pipelines ETL robustos e f
 pubDate: 2026-05-26
 lang: pt-BR
 translationKey: net-for-data-engineers-using-c-for-etl-pipelines-and-data-processing
-category: misc
+category: csharp
 tags: ["dotnet", "csharp", "engenharia-de-dados", "etl"]
-draft: true
+draft: false
 heroImage: "/img/posts/net-for-data-engineers-using-c-for-etl-pipelines-and-data-processing.jpg"
 ---
 ## Por Que Considerar .NET para Engenharia de Dados?

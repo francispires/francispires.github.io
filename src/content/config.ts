@@ -10,7 +10,7 @@ const blog = defineCollection({
     lang: z.enum(['en', 'pt-BR']).default('en'),
     translationKey: z.string().optional(),
     category: z
-      .enum(['data-engineering', 'python', 'sql', 'javascript', 'devops', 'math', 'misc'])
+      .enum(['csharp', 'typescript', 'data-engineering', 'python', 'sql', 'javascript', 'devops', 'math', 'misc'])
       .default('misc'),
     tags: z.array(z.string()).default([]),
     draft: z.boolean().default(true),
