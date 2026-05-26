@@ -36,6 +36,8 @@ const BLOG_DIR = join(ROOT, 'src/content/blog');
 const IMG_DIR  = join(ROOT, 'public/img/posts');
 
 const CATEGORIES = [
+  'csharp',
+  'typescript',
   'data-engineering',
   'python',
   'sql',
@@ -409,15 +411,15 @@ async function main() {
   // ── Write files
   mkdirSync(BLOG_DIR, { recursive: true });
 
-  const enFile = writePost({
+  const ptFile = writePost({
     result: primary, lang: primaryLang, category,
     translationKey, heroImage, slug, date, authored: isRevise,
   });
 
-  let ptFile = null;
+  let enFile = null;
   if (secondary) {
-    ptFile = writePost({
-      result: secondary, lang: 'pt-BR', category,
+    enFile = writePost({
+      result: secondary, lang: 'en', category,
       translationKey, heroImage, slug, date, authored: isRevise,
     });
   }
@@ -425,8 +427,8 @@ async function main() {
   // ── Summary
   console.log('\n' + chalk.green('✓ Done!\n'));
   console.log(chalk.dim('Files created:'));
-  console.log('  ' + chalk.cyan(`src/content/blog/${enFile.filename}`));
-  if (ptFile) console.log('  ' + chalk.cyan(`src/content/blog/${ptFile.filename}`));
+  console.log('  ' + chalk.cyan(`src/content/blog/${ptFile.filename}`));
+  if (enFile) console.log('  ' + chalk.cyan(`src/content/blog/${enFile.filename}`));
 
   console.log('\n' + chalk.dim('Next steps:'));
   console.log('  1. ' + chalk.white('Review the output — check facts, voice, diagrams'));
