@@ -129,6 +129,7 @@ async function askMissing(args) {
       addCategoryToSchema(slug);
       console.log(chalk.green(`  ✓ Added "${slug}" to src/content/config.ts`));
       args.category = slug;
+      args._newCategory = true;
     } else {
       args.category = category;
     }
@@ -388,7 +389,7 @@ async function main() {
   let args = parseArgs();
   args = await askMissing(args);
 
-  const { mode, topic, input, category, lang, image: wantImage } = args;
+  const { mode, topic, input, category, lang, image: wantImage, _newCategory } = args;
   const client  = new Anthropic();
   const date    = new Date().toISOString().split('T')[0];
   const isBilingual  = lang === 'both';
@@ -451,11 +452,19 @@ async function main() {
   console.log('  ' + chalk.cyan(`src/content/blog/${ptFile.filename}`));
   if (enFile) console.log('  ' + chalk.cyan(`src/content/blog/${enFile.filename}`));
 
+  const gitAdd = _newCategory
+    ? 'git add src/content/blog/ src/content/config.ts'
+    : 'git add src/content/blog/';
+
+  if (_newCategory) {
+    console.log('\n' + chalk.yellow('⚠  New category added — include config.ts in your commit or the CI build will fail.'));
+  }
+
   console.log('\n' + chalk.dim('Next steps:'));
   console.log('  1. ' + chalk.white('Review the output — check facts, voice, diagrams'));
   console.log('  2. ' + chalk.white('npm run dev') + chalk.dim('  →  http://localhost:4321'));
   console.log('  3. ' + chalk.white('Set') + chalk.cyan(' draft: false') + chalk.white(' when ready to publish'));
-  console.log('  4. ' + chalk.white(`git add src/content/blog/ && git commit -m "post: ${primary.title}"`));
+  console.log('  4. ' + chalk.white(`${gitAdd} && git commit -m "post: ${primary.title}"`));
   console.log('  5. ' + chalk.white('git push origin master') + chalk.dim('  →  GitHub Actions deploys in ~60s\n'));
 }
 
