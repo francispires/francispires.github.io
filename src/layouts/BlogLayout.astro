@@ -1,0 +1,215 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import GiscusComments from '../components/GiscusComments.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+  translationUrl?: string;
+}
+
+const { post, translationUrl } = Astro.props;
+const { title, description, pubDate, updatedDate, tags, category, lang, heroImage, heroAlt } =
+  post.data;
+const dateStr = pubDate.toISOString().split('T')[0];
+---
+
+<BaseLayout title={title} description={description} image={heroImage} lang={lang}>
+  <div class="content-container post-page">
+
+    <div class="post-breadcrumb">
+      <span class="bc-dollar">$</span>
+      <span class="bc-cmd">cat</span>
+      <span class="bc-path">./blog/<span class="bc-slug">{post.slug}</span>.md</span>
+    </div>
+
+    {translationUrl && (
+      <div class="post-translation">
+        <span class="tr-label">→ read in</span>
+        <a href={translationUrl} class="tr-link">
+          {lang === 'en' ? 'Português (pt-BR)' : 'English'}
+        </a>
+      </div>
+    )}
+
+    <header class="post-header">
+      <h1 class="post-title">{title}</h1>
+      <div class="post-meta">
+        <time datetime={pubDate.toISOString()} class="meta-date">{dateStr}</time>
+        {updatedDate && (
+          <span class="meta-updated">
+            updated: {updatedDate.toISOString().split('T')[0]}
+          </span>
+        )}
+        {category && <span class="meta-cat">&lt;{category}&gt;</span>}
+      </div>
+      <p class="post-desc">{description}</p>
+      {tags.length > 0 && (
+        <div class="post-tags">
+          {tags.map(t => <span class="tag">#{t}</span>)}
+        </div>
+      )}
+    </header>
+
+    {heroImage && (
+      <img src={heroImage} alt={heroAlt || title} class="post-hero" loading="lazy" />
+    )}
+
+    <article class="post-body">
+      <slot />
+    </article>
+
+    <GiscusComments />
+  </div>
+</BaseLayout>
+
+<style>
+  .post-page {
+    padding-top: 3rem;
+    padding-bottom: 4rem;
+  }
+
+  .post-breadcrumb {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .bc-dollar { color: var(--green); }
+  .bc-cmd    { color: var(--cyan); }
+  .bc-path   { color: var(--text-dim); }
+  .bc-slug   { color: var(--text-muted); }
+
+  .post-translation {
+    font-size: 0.8rem;
+    margin-bottom: 1.5rem;
+    padding: 0.5rem 0.75rem;
+    border-left: 2px solid var(--amber);
+    background: rgba(255, 184, 0, 0.05);
+  }
+
+  .tr-label { color: var(--text-muted); margin-right: 0.4rem; }
+  .tr-link  { color: var(--amber); }
+
+  .post-header { margin-bottom: 2.5rem; }
+
+  .post-title {
+    font-size: clamp(1.5rem, 4vw, 2.25rem);
+    margin-bottom: 0.75rem;
+    line-height: 1.25;
+  }
+
+  .post-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+  }
+
+  .meta-date    { color: var(--cyan); }
+  .meta-updated { color: var(--text-dim); }
+  .meta-cat     { color: var(--text-muted); }
+
+  .post-desc {
+    font-size: 1rem;
+    color: var(--text-muted);
+    border-left: 2px solid var(--green);
+    padding-left: 1rem;
+    margin-bottom: 1rem;
+    font-style: italic;
+  }
+
+  .post-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+
+  .post-hero {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    margin-bottom: 2.5rem;
+  }
+
+  /* Post body prose */
+  .post-body {
+    color: var(--text);
+    line-height: 1.85;
+  }
+
+  .post-body :global(h2) {
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--border);
+    color: var(--green);
+    font-size: 1.5rem;
+  }
+
+  .post-body :global(h3) {
+    margin-top: 1.75rem;
+    margin-bottom: 0.75rem;
+    color: var(--cyan);
+    font-size: 1.15rem;
+  }
+
+  .post-body :global(p) { margin-bottom: 1.25rem; }
+
+  .post-body :global(ul),
+  .post-body :global(ol) {
+    padding-left: 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .post-body :global(li) { margin-bottom: 0.4rem; }
+
+  .post-body :global(blockquote) {
+    border-left: 2px solid var(--green);
+    padding: 0.5rem 1rem;
+    margin: 1.5rem 0;
+    background: rgba(0, 255, 135, 0.03);
+    color: var(--text-muted);
+    font-style: italic;
+  }
+
+  .post-body :global(hr) {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2rem 0;
+  }
+
+  .post-body :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    margin-bottom: 1.5rem;
+    overflow-x: auto;
+    display: block;
+  }
+
+  .post-body :global(th) {
+    background: var(--bg-elevated);
+    color: var(--cyan);
+    padding: 0.5rem 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+
+  .post-body :global(td) {
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .post-body :global(tr:hover td) { background: rgba(0, 255, 135, 0.02); }
+
+  .post-body :global(.astro-code) {
+    border: 1px solid var(--border) !important;
+    border-radius: 6px !important;
+    margin: 1.5rem 0 !important;
+    font-size: 14px !important;
+  }
+</style>

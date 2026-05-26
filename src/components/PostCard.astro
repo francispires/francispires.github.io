@@ -1,0 +1,59 @@
+---
+interface Props {
+  slug: string;
+  title: string;
+  pubDate: Date;
+  description: string;
+  tags?: string[];
+  category?: string;
+  lang?: string;
+}
+
+const { slug, title, pubDate, category, lang } = Astro.props;
+const dateStr = pubDate.toISOString().split('T')[0];
+---
+
+<a href={`/blog/${slug}`} class="post-card">
+  <span class="pc-perms">drwxr-xr-x</span>
+  <time class="pc-date" datetime={pubDate.toISOString()}>{dateStr}</time>
+  <span class="pc-title">{title}</span>
+  {lang === 'pt-BR' && <span class="pc-lang">[pt-BR]</span>}
+  {category && <span class="pc-cat">&lt;{category}&gt;</span>}
+</a>
+
+<style>
+  .post-card {
+    display: grid;
+    grid-template-columns: auto auto 1fr auto auto;
+    gap: 1rem;
+    align-items: center;
+    padding: 0.6rem 0.75rem;
+    border-radius: 4px;
+    text-decoration: none;
+    color: var(--text);
+    transition: background 0.12s ease, border-color 0.12s ease;
+    font-size: 0.875rem;
+    border: 1px solid transparent;
+  }
+
+  .post-card:hover {
+    background: rgba(0, 255, 135, 0.04);
+    border-color: var(--border);
+    color: var(--text);
+  }
+
+  .post-card:hover .pc-title { color: var(--green); }
+
+  .pc-perms { color: var(--text-dim); font-size: 0.75rem; user-select: none; }
+  .pc-date  { color: var(--cyan); white-space: nowrap; font-size: 0.8rem; }
+  .pc-title { font-weight: 500; transition: color 0.12s ease; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .pc-lang  { color: var(--amber); font-size: 0.75rem; }
+  .pc-cat   { color: var(--text-muted); font-size: 0.75rem; white-space: nowrap; }
+
+  @media (max-width: 640px) {
+    .post-card { grid-template-columns: 1fr auto; }
+    .pc-perms, .pc-cat, .pc-lang { display: none; }
+    .pc-date { grid-column: 2; }
+    .pc-title { grid-column: 1; }
+  }
+</style>

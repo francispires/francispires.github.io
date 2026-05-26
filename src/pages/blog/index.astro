@@ -1,0 +1,87 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const categories = [...new Set(allPosts.map(p => p.data.category))].sort();
+---
+
+<BaseLayout
+  title="Blog"
+  description="Articles on data engineering, Python, SQL, JavaScript, and more."
+>
+  <div class="content-container page-wrap">
+
+    <div class="page-header">
+      <div class="section-header"><span>blog</span></div>
+      <div class="post-count">
+        <span class="pd">$</span> ls -la ./blog/ | wc -l →
+        <span class="pn">{allPosts.length}</span> posts
+      </div>
+    </div>
+
+    <div class="cat-filter">
+      <a href="/blog" class="cat-btn active">all</a>
+      {categories.map(cat => (
+        <a href={`/blog/category/${cat}`} class="cat-btn">{cat}</a>
+      ))}
+    </div>
+
+    {allPosts.length > 0 ? (
+      <div class="posts-list">
+        {allPosts.map(p => (
+          <PostCard
+            slug={p.slug}
+            title={p.data.title}
+            pubDate={p.data.pubDate}
+            description={p.data.description}
+            tags={p.data.tags}
+            category={p.data.category}
+            lang={p.data.lang}
+          />
+        ))}
+      </div>
+    ) : (
+      <p class="empty">
+        <span class="pd">$</span>
+        <span style="color: var(--text-muted)">// No published posts yet.</span>
+      </p>
+    )}
+  </div>
+</BaseLayout>
+
+<style>
+  .page-wrap { padding-top: 3rem; padding-bottom: 4rem; }
+
+  .page-header { margin-bottom: 2rem; }
+
+  .post-count { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem; }
+  .pd { color: var(--green); }
+  .pn { color: var(--cyan); }
+
+  .cat-filter { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 2rem; }
+
+  .cat-btn {
+    font-size: 0.75rem;
+    padding: 0.2em 0.6em;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: all 0.12s ease;
+  }
+
+  .cat-btn:hover,
+  .cat-btn.active {
+    border-color: var(--green);
+    color: var(--green);
+    background: rgba(0, 255, 135, 0.05);
+  }
+
+  .posts-list { display: flex; flex-direction: column; gap: 0.25rem; }
+
+  .empty { font-size: 0.875rem; color: var(--text-muted); }
+</style>

@@ -1,0 +1,141 @@
+---
+const navLinks = [
+  { href: '/blog', label: './blog' },
+  { href: '/projects', label: './projects' },
+  { href: '/about', label: './about' },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<nav class="nav" id="main-nav">
+  <div class="nav-inner container">
+    <a href="/" class="nav-brand" aria-label="Home">
+      <span class="pu">francispires</span><span
+        class="pa">@</span><span
+        class="ph">github</span><span
+        class="pc">:</span><span
+        class="pd">~</span><span
+        class="ps">$</span>
+    </a>
+
+    <div class="nav-links" id="nav-links">
+      {navLinks.map(link => (
+        <a
+          href={link.href}
+          class={`nav-link ${currentPath.startsWith(link.href) ? 'active' : ''}`}
+        >
+          {link.label}
+        </a>
+      ))}
+    </div>
+
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+      [menu]
+    </button>
+  </div>
+</nav>
+
+<script>
+  const toggle = document.getElementById('nav-toggle');
+  const links = document.getElementById('nav-links');
+  toggle?.addEventListener('click', () => {
+    const isOpen = links?.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', String(isOpen));
+    toggle.textContent = isOpen ? '[close]' : '[menu]';
+  });
+</script>
+
+<style>
+  .nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    height: var(--nav-height);
+    background: rgba(13, 13, 13, 0.9);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    gap: 1rem;
+  }
+
+  .nav-brand {
+    font-size: 0.875rem;
+    font-weight: 500;
+    white-space: nowrap;
+    color: var(--text-muted);
+    text-decoration: none;
+  }
+  .nav-brand:hover { color: var(--text-muted); }
+
+  .pu { color: var(--green); }
+  .pa, .pc, .ps { color: var(--text-muted); }
+  .ph { color: var(--cyan); }
+  .pd { color: var(--amber); }
+  .ps { margin-left: 0.25rem; }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .nav-link {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 3px;
+    text-decoration: none;
+    transition: color 0.15s ease, background 0.15s ease;
+  }
+
+  .nav-link:hover,
+  .nav-link.active {
+    color: var(--green);
+    background: rgba(0, 255, 135, 0.06);
+  }
+
+  .nav-toggle {
+    display: none;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .nav-toggle:hover {
+    color: var(--green);
+    border-color: var(--green);
+  }
+
+  @media (max-width: 640px) {
+    .nav-toggle { display: block; }
+
+    .nav-links {
+      display: none;
+      position: absolute;
+      top: var(--nav-height);
+      left: 0; right: 0;
+      flex-direction: column;
+      align-items: flex-start;
+      background: var(--bg-elevated);
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem;
+      gap: 0.25rem;
+    }
+
+    .nav-links.open { display: flex; }
+    .nav-link { width: 100%; }
+  }
+</style>

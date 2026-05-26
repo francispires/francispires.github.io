@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(///wsl.localhost/Ubuntu-24.04/home/fran/**)",
+      "Bash(dir \"\\\\\\\\\\\\\\\\wsl.localhost\\\\\\\\Ubuntu-24.04\\\\\\\\home\\\\\\\\fran\\\\\\\\francispires.github.io\\\\\\\\\")",
+      "Bash(wsl *)",
+      "PowerShell(wsl -d Ubuntu-24.04 --cd /home/fran/francispires.github.io -- bash -c \"node --version && npm --version\")",
+      "PowerShell(wsl -d Ubuntu-24.04 --cd /home/fran/francispires.github.io -- bash -c \"npm install 2>&1\")",
+      "PowerShell(wsl -d Ubuntu-24.04 -e bash -c \"cd /home/fran/francispires.github.io && npm install 2>&1\")",
+      "PowerShell(wsl -d Ubuntu-24.04 -e bash -c \"which npm; which node; echo 'node version:'; node --version\")",
+      "PowerShell(wsl -d Ubuntu-24.04 -e bash -c \"/usr/bin/npm --version 2>/dev/null || echo 'Linux npm not at /usr/bin/npm'\")",
+      "PowerShell(wsl -d Ubuntu-24.04 -e bash -c \"apt-cache policy npm 2>/dev/null | head -5; dpkg -l nodejs 2>/dev/null | tail -2\")",
+      "PowerShell(wsl -d Ubuntu-24.04 -e bash -c \"sudo apt-get install -y npm 2>&1 | tail -5\")",
+      "Bash(npm --version)",
+      "PowerShell(wsl -d Ubuntu-24.04 -e bash -c \"which npm && /usr/bin/npm --version 2>/dev/null || echo 'not yet'\")",
+      "PowerShell(wsl -d Ubuntu-24.04 -e bash -c \"apt list --installed 2>/dev/null | grep npm\")",
+      "PowerShell(wsl -d Ubuntu-24.04 -e bash -c \"curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash 2>&1 | tail -8\")",
+      "PowerShell(wsl -d Ubuntu-24.04 -e bash -c 'export NVM_DIR=\"$HOME/.nvm\" && [ -s \"$NVM_DIR/nvm.sh\" ] && \\\\. \"$NVM_DIR/nvm.sh\" && nvm install 20 2>&1 | tail -5')",
+      "PowerShell(wsl -d Ubuntu-24.04 -e bash -c 'export NVM_DIR=\"$HOME/.nvm\" && \\\\. \"$NVM_DIR/nvm.sh\" && cd /home/fran/francispires.github.io && npm install 2>&1')",
+      "PowerShell(wsl -d Ubuntu-24.04 -e bash -c 'export NVM_DIR=\"$HOME/.nvm\" && \\\\. \"$NVM_DIR/nvm.sh\" && cd /home/fran/francispires.github.io && npm run build 2>&1')",
+      "PowerShell(wsl -d Ubuntu-24.04 -e bash -c 'export NVM_DIR=\"$HOME/.nvm\" && \\\\. \"$NVM_DIR/nvm.sh\" && cd /home/fran/francispires.github.io && git add -A && git status --short 2>&1 | head -30')"
+    ]
+  }
+}

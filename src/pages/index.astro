@@ -1,0 +1,178 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from '../components/PostCard.astro';
+import SkillBar from '../components/SkillBar.astro';
+import TypewriterHero from '../components/TypewriterHero.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 6);
+
+const skills = [
+  { name: 'Python',         pct: 85, color: 'var(--cyan)'  },
+  { name: 'SQL',            pct: 80, color: 'var(--green)' },
+  { name: 'Data Analysis',  pct: 82, color: 'var(--amber)' },
+  { name: 'JavaScript',     pct: 70, color: 'var(--cyan)'  },
+  { name: 'Git / DevOps',   pct: 65, color: 'var(--green)' },
+  { name: 'ML / AI',        pct: 55, color: 'var(--amber)' },
+];
+---
+
+<BaseLayout
+  title="Francis Pires"
+  description="Developer and data analyst. Building things with Python, SQL, and JavaScript."
+>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <pre class="ascii-art" aria-hidden="true">
+  ███████╗██████╗  █████╗ ███╗  ██╗ ██████╗██╗███████╗
+  ██╔════╝██╔══██╗██╔══██╗████╗ ██║██╔════╝██║██╔════╝
+  █████╗  ██████╔╝███████║██╔██╗██║██║     ██║███████╗
+  ██╔══╝  ██╔══██╗██╔══██║██║╚████║██║     ██║╚════██║
+  ██║     ██║  ██║██║  ██║██║ ╚███║╚██████╗██║███████║
+  ╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚══╝ ╚═════╝╚═╝╚══════╝</pre>
+
+      <TypewriterHero />
+
+      <div class="hero-actions">
+        <a href="/projects" class="hero-btn primary">$ ls ./projects</a>
+        <a href="/blog"     class="hero-btn secondary">$ cat ./blog/*</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <span>skills <span class="sh-dim">// htop-style</span></span>
+      </div>
+      <div class="skills-grid">
+        {skills.map(s => <SkillBar name={s.name} pct={s.pct} color={s.color} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- Recent posts -->
+  {posts.length > 0 && (
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span>
+            recent posts
+            <a href="/blog" class="sh-more">→ all</a>
+          </span>
+        </div>
+        <div class="posts-list">
+          {posts.map(p => (
+            <PostCard
+              slug={p.slug}
+              title={p.data.title}
+              pubDate={p.data.pubDate}
+              description={p.data.description}
+              tags={p.data.tags}
+              category={p.data.category}
+              lang={p.data.lang}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  {posts.length === 0 && (
+    <section class="section">
+      <div class="container">
+        <div class="section-header"><span>blog</span></div>
+        <p class="no-posts">
+          <span style="color: var(--text-dim)">$ ls ./blog/</span><br />
+          <span style="color: var(--text-muted)">// No published posts yet. Check back soon.</span>
+        </p>
+      </div>
+    </section>
+  )}
+</BaseLayout>
+
+<style>
+  .hero {
+    min-height: calc(100vh - var(--nav-height));
+    display: flex;
+    align-items: center;
+    padding: 4rem 0 3rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .ascii-art {
+    font-size: clamp(0.28rem, 1vw, 0.62rem);
+    color: var(--green);
+    line-height: 1.2;
+    margin-bottom: 2.5rem;
+    overflow-x: auto;
+    opacity: 0.8;
+    background: none;
+    border: none;
+    padding: 0;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .hero-btn {
+    display: inline-block;
+    padding: 0.55rem 1.25rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    text-decoration: none;
+    font-family: var(--font-mono);
+    transition: all 0.15s ease;
+  }
+
+  .hero-btn.primary {
+    background: var(--green);
+    color: #000;
+    font-weight: 700;
+  }
+
+  .hero-btn.primary:hover {
+    background: var(--cyan);
+    color: #000;
+  }
+
+  .hero-btn.secondary {
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+  }
+
+  .hero-btn.secondary:hover {
+    border-color: var(--green);
+    color: var(--green);
+  }
+
+  .section {
+    padding: 4rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section:last-child { border-bottom: none; }
+
+  .skills-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    max-width: 520px;
+  }
+
+  .sh-dim  { color: var(--text-dim); font-size: 0.8rem; }
+  .sh-more { color: var(--text-muted); font-size: 0.8rem; text-decoration: none; margin-left: 0.5rem; }
+  .sh-more:hover { color: var(--green); }
+
+  .posts-list { display: flex; flex-direction: column; gap: 0.25rem; }
+
+  .no-posts { font-size: 0.875rem; line-height: 2; }
+</style>

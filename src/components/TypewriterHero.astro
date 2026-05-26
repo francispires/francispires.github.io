@@ -1,0 +1,72 @@
+---
+const phrases = [
+  'developer. data analyst.',
+  'building pipelines. writing queries.',
+  'Python. SQL. JavaScript.',
+  'turning data into decisions.',
+  'sempre aprendendo.',
+];
+---
+
+<div class="hero-typewriter">
+  <div class="tw-line muted">$ whoami</div>
+  <div class="tw-line">
+    <span class="tw-arrow">&gt;&nbsp;</span><span
+      id="tw-text" class="tw-text"></span><span
+      class="tw-cursor">_</span>
+  </div>
+</div>
+
+<script define:vars={{ phrases }}>
+  const el = document.getElementById('tw-text');
+  if (!el) return;
+
+  let phraseIdx = 0;
+  let charIdx = 0;
+  let deleting = false;
+
+  function tick() {
+    const phrase = phrases[phraseIdx];
+    if (deleting) {
+      el.textContent = phrase.slice(0, charIdx--);
+      if (charIdx < 0) {
+        deleting = false;
+        phraseIdx = (phraseIdx + 1) % phrases.length;
+        setTimeout(tick, 500);
+        return;
+      }
+      setTimeout(tick, 35);
+    } else {
+      el.textContent = phrase.slice(0, ++charIdx);
+      if (charIdx === phrase.length) {
+        deleting = true;
+        setTimeout(tick, 2600);
+        return;
+      }
+      setTimeout(tick, 65);
+    }
+  }
+
+  tick();
+</script>
+
+<style>
+  .hero-typewriter {
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    line-height: 2;
+    margin-bottom: 0.5rem;
+  }
+
+  .tw-line { display: flex; align-items: baseline; }
+  .tw-line.muted { color: var(--text-muted); }
+
+  .tw-arrow { color: var(--green); }
+  .tw-text  { color: var(--text); }
+
+  .tw-cursor {
+    color: var(--green);
+    animation: blink 1s step-end infinite;
+  }
+
+  @keyframes blink { 50% { opacity: 0; } }
+</style>

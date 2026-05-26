@@ -1,0 +1,32 @@
+---
+import BlogLayout from '../../layouts/BlogLayout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return posts.map(post => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+
+// Find bilingual counterpart
+const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+const translation = post.data.translationKey
+  ? allPosts.find(
+      p =>
+        p.data.translationKey === post.data.translationKey &&
+        p.slug !== post.slug
+    )
+  : undefined;
+
+const translationUrl = translation ? `/blog/${translation.slug}` : undefined;
+
+const { Content } = await post.render();
+---
+
+<BlogLayout post={post} translationUrl={translationUrl}>
+  <Content />
+</BlogLayout>

@@ -1,0 +1,154 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="About"
+  description="Francis Pires — developer and data analyst based in Brazil."
+>
+  <div class="content-container page-wrap">
+
+    <div class="breadcrumb">
+      <span class="bc-d">$</span>
+      <span class="bc-c">cat</span>
+      <span class="bc-p">./about.md</span>
+    </div>
+
+    <div class="terminal-block">
+      <div class="tb-bar">
+        <span class="dot red"></span>
+        <span class="dot amber"></span>
+        <span class="dot green"></span>
+        <span class="tb-file">whoami.sh</span>
+      </div>
+
+      <div class="tb-body">
+        <div class="cmd"><span class="dollar">$</span> <span class="cmd-text">./whoami.sh</span></div>
+
+        <div class="out">
+          <p><span class="k">name</span>: <span class="v">Francis Pires</span></p>
+          <p><span class="k">location</span>: <span class="v">Brazil 🇧🇷</span></p>
+          <p><span class="k">role</span>: <span class="v">Developer · Data Analyst</span></p>
+          <p><span class="k">stack</span>: <span class="v">Python · SQL · JavaScript · dbt · Power BI</span></p>
+          <p><span class="k">education</span>: <span class="v">Computer Engineering @ FIAP · Programming @ FIA</span></p>
+          <p><span class="k">languages</span>: <span class="v">Português 🇧🇷 · English 🇺🇸</span></p>
+          <p><span class="k">interests</span>: <span class="v">data pipelines · open source · music · woodworking</span></p>
+          <p>
+            <span class="k">github</span>:&nbsp;
+            <a href="https://github.com/francispires" target="_blank" rel="noopener" class="v link">
+              @francispires
+            </a>
+          </p>
+        </div>
+
+        <br />
+
+        <div class="cmd"><span class="dollar">$</span> <span class="cmd-text">cat ./bio.txt</span></div>
+
+        <div class="out bio">
+          <p>
+            I'm a developer and data analyst passionate about turning raw data into
+            actionable insights. I spend most of my time building data pipelines,
+            writing SQL, and wiring Python together with whatever tools the problem
+            calls for.
+          </p>
+          <p>
+            I studied Computer Engineering at FIAP and Programming at FIA.
+            Outside of code I enjoy music, woodworking, game development, and
+            finding creative uses for math.
+          </p>
+          <p>
+            This site is where I document what I learn — in English, Portuguese,
+            or both, depending on the topic and who I think needs to read it.
+          </p>
+        </div>
+
+        <br />
+
+        <div class="cmd">
+          <span class="dollar">$</span>
+          <span class="cursor">_</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-wrap { padding-top: 3rem; padding-bottom: 4rem; }
+
+  .breadcrumb {
+    display: flex;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+  }
+
+  .bc-d { color: var(--green); }
+  .bc-c { color: var(--cyan); }
+  .bc-p { color: var(--text-dim); }
+
+  .terminal-block {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--bg-surface);
+  }
+
+  .tb-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.6rem 1rem;
+    background: var(--bg-elevated);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+  }
+
+  .dot.red   { background: var(--red); }
+  .dot.amber { background: var(--amber); }
+  .dot.green { background: var(--green); }
+
+  .tb-file { margin-left: auto; font-size: 0.75rem; color: var(--text-muted); }
+
+  .tb-body { padding: 1.5rem; }
+
+  .cmd {
+    display: flex;
+    gap: 0.5rem;
+    align-items: baseline;
+    margin-bottom: 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  .dollar   { color: var(--green); }
+  .cmd-text { color: var(--cyan); }
+
+  .cursor {
+    color: var(--green);
+    animation: blink 1s step-end infinite;
+  }
+
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .out {
+    padding-left: 1.25rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    font-size: 0.875rem;
+  }
+
+  .k    { color: var(--cyan); }
+  .v    { color: var(--text); }
+  .link { text-decoration: underline; text-underline-offset: 3px; }
+  .link:hover { color: var(--green); }
+
+  .bio { color: var(--text-muted); line-height: 1.8; gap: 0.75rem; }
+</style>

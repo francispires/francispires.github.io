@@ -1,0 +1,120 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map(project => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { Content } = await project.render();
+const { title, description, tech, url, github, image, imageAlt } = project.data;
+---
+
+<BaseLayout title={title} description={description} image={image}>
+  <div class="content-container page-wrap">
+
+    <div class="breadcrumb">
+      <span class="bc-d">$</span>
+      <span class="bc-c">cat</span>
+      <span class="bc-p">./projects/{project.slug}.md</span>
+    </div>
+
+    <header class="proj-header">
+      <h1>{title}</h1>
+      <p class="proj-desc">{description}</p>
+
+      <div class="proj-tech">
+        {tech.map(t => <span class="tech-badge">{t}</span>)}
+      </div>
+
+      <div class="proj-links">
+        {github && (
+          <a href={github} target="_blank" rel="noopener" class="proj-link">
+            [github →]
+          </a>
+        )}
+        {url && (
+          <a href={url} target="_blank" rel="noopener" class="proj-link">
+            [live →]
+          </a>
+        )}
+      </div>
+    </header>
+
+    {image && (
+      <img src={image} alt={imageAlt || title} class="proj-image" loading="lazy" />
+    )}
+
+    <article class="post-body">
+      <Content />
+    </article>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-wrap { padding-top: 3rem; padding-bottom: 4rem; }
+
+  .breadcrumb {
+    display: flex;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+  }
+
+  .bc-d { color: var(--green); }
+  .bc-c { color: var(--cyan); }
+  .bc-p { color: var(--text-dim); }
+
+  .proj-header { margin-bottom: 2rem; }
+
+  .proj-header h1 {
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    margin-bottom: 0.75rem;
+  }
+
+  .proj-desc {
+    color: var(--text-muted);
+    font-size: 1rem;
+    border-left: 2px solid var(--green);
+    padding-left: 1rem;
+    margin-bottom: 1rem;
+    font-style: italic;
+  }
+
+  .proj-tech { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem; }
+
+  .tech-badge {
+    font-size: 0.75rem;
+    background: var(--bg-elevated);
+    color: var(--cyan);
+    padding: 0.2em 0.6em;
+    border-radius: 3px;
+    border: 1px solid var(--border);
+  }
+
+  .proj-links { display: flex; gap: 1rem; }
+
+  .proj-link { color: var(--green); font-size: 0.875rem; }
+  .proj-link:hover { color: var(--cyan); }
+
+  .proj-image {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    margin-bottom: 2rem;
+  }
+
+  .post-body { color: var(--text); line-height: 1.85; }
+  .post-body :global(h2) { margin-top: 2rem; margin-bottom: 0.75rem; color: var(--green); border-top: 1px solid var(--border); padding-top: 0.5rem; }
+  .post-body :global(p) { margin-bottom: 1rem; }
+  .post-body :global(ul) { padding-left: 1.5rem; margin-bottom: 1rem; }
+  .post-body :global(li) { margin-bottom: 0.25rem; }
+</style>

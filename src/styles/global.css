@@ -1,0 +1,162 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg:          #0d0d0d;
+  --bg-surface:  #141414;
+  --bg-elevated: #1a1a1a;
+  --border:      #2a2a2a;
+  --text:        #e0e0e0;
+  --text-muted:  #6b7280;
+  --text-dim:    #4b5563;
+  --green:       #00ff87;
+  --cyan:        #00d4ff;
+  --amber:       #ffb800;
+  --red:         #ff5555;
+  --selection:   rgba(0, 255, 135, 0.13);
+
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+  --nav-height: 56px;
+  --content-width: 720px;
+  --wide-width: 1100px;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: var(--font-mono);
+  background-color: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.75;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+  padding-top: var(--nav-height);
+}
+
+::selection {
+  background: var(--selection);
+  color: var(--green);
+}
+
+a {
+  color: var(--green);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+a:hover {
+  color: var(--cyan);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.3;
+}
+
+h1 { font-size: 2.25rem; }
+h2 { font-size: 1.625rem; font-weight: 500; }
+h3 { font-size: 1.25rem; font-weight: 500; }
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: var(--bg-elevated);
+  color: var(--cyan);
+  padding: 0.15em 0.4em;
+  border-radius: 3px;
+}
+
+pre code {
+  background: none;
+  color: inherit;
+  padding: 0;
+  font-size: inherit;
+}
+
+pre {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1.25rem;
+  overflow-x: auto;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.container {
+  max-width: var(--wide-width);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.content-container {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: var(--amber);
+  border: 1px solid rgba(255, 184, 0, 0.4);
+  padding: 0.1em 0.5em;
+  border-radius: 3px;
+  text-transform: lowercase;
+  transition: background 0.15s ease;
+}
+
+.tag:hover {
+  background: rgba(255, 184, 0, 0.1);
+  color: var(--amber);
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+.section-header::before {
+  content: '$';
+  color: var(--green);
+  font-weight: 700;
+}
+
+.section-header span {
+  color: var(--text);
+  font-size: 1.125rem;
+  font-weight: 500;
+}
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }

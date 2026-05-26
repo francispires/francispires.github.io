@@ -1,0 +1,47 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <span class="footer-cmd">
+      <span class="fd">$</span>
+      echo "© {year} Francis Pires"
+    </span>
+    <div class="footer-links">
+      <a href="https://github.com/francispires" target="_blank" rel="noopener">github</a>
+      <span class="sep">·</span>
+      <a href="/rss.xml">rss</a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    border-top: 1px solid var(--border);
+    padding: 1.5rem 0;
+    margin-top: 4rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  .footer-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .fd { color: var(--green); margin-right: 0.4rem; }
+
+  .footer-links {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .footer-links a { color: var(--text-muted); }
+  .footer-links a:hover { color: var(--green); }
+  .sep { color: var(--border); }
+</style>

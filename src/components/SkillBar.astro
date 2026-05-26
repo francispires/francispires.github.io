@@ -1,0 +1,38 @@
+---
+interface Props {
+  name: string;
+  pct: number;
+  color?: string;
+}
+
+const { name, pct, color = 'var(--green)' } = Astro.props;
+const filled = Math.round(pct / 5);
+const empty = 20 - filled;
+---
+
+<div class="skill-bar">
+  <span class="sb-name">{name}</span>
+  <span class="sb-bar" style={`color: ${color}`}>
+    {'█'.repeat(filled)}{'░'.repeat(empty)}
+  </span>
+  <span class="sb-pct">{pct}%</span>
+</div>
+
+<style>
+  .skill-bar {
+    display: grid;
+    grid-template-columns: 130px 1fr auto;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.85rem;
+    padding: 0.2rem 0;
+  }
+
+  .sb-name { color: var(--text-muted); text-align: right; }
+  .sb-bar  { letter-spacing: -0.05em; font-size: 0.7rem; line-height: 1; }
+  .sb-pct  { color: var(--text-dim); font-size: 0.75rem; min-width: 3ch; text-align: right; }
+
+  @media (max-width: 640px) {
+    .skill-bar { grid-template-columns: 90px 1fr auto; gap: 0.5rem; }
+  }
+</style>

@@ -1,0 +1,68 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { getCollection } from 'astro:content';
+
+const projects = (await getCollection('projects'))
+  .sort((a, b) => a.data.order - b.data.order);
+
+const featured = projects.filter(p => p.data.featured);
+const others   = projects.filter(p => !p.data.featured);
+---
+
+<BaseLayout
+  title="Projects"
+  description="A selection of development and data analysis projects by Francis Pires."
+>
+  <div class="container page-wrap">
+
+    <div class="section-header"><span>projects</span></div>
+
+    {featured.length > 0 && (
+      <div class="proj-section">
+        <div class="ps-label">★ featured</div>
+        <div class="projects-grid">
+          {featured.map(p => (
+            <ProjectCard
+              slug={p.slug}
+              title={p.data.title}
+              description={p.data.description}
+              tech={p.data.tech}
+              featured={true}
+            />
+          ))}
+        </div>
+      </div>
+    )}
+
+    {others.length > 0 && (
+      <div class="proj-section">
+        {featured.length > 0 && <div class="ps-label">◈ other projects</div>}
+        <div class="projects-grid">
+          {others.map(p => (
+            <ProjectCard
+              slug={p.slug}
+              title={p.data.title}
+              description={p.data.description}
+              tech={p.data.tech}
+            />
+          ))}
+        </div>
+      </div>
+    )}
+  </div>
+</BaseLayout>
+
+<style>
+  .page-wrap { padding-top: 3rem; padding-bottom: 4rem; }
+
+  .proj-section { margin-bottom: 3rem; }
+
+  .ps-label { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem; }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+    gap: 1rem;
+  }
+</style>
