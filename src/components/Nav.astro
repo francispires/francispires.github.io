@@ -1,8 +1,8 @@
 ---
 const navLinks = [
-  { href: '/blog', label: './blog' },
+  { href: '/blog',     label: './blog'     },
   { href: '/projects', label: './projects' },
-  { href: '/about', label: './about' },
+  { href: '/about',    label: './about'    },
 ];
 
 const currentPath = Astro.url.pathname;
@@ -30,15 +30,50 @@ const currentPath = Astro.url.pathname;
       ))}
     </div>
 
-    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
-      [menu]
-    </button>
+    <div class="nav-right">
+      <button class="lang-toggle" id="lang-toggle" aria-label="Toggle language">
+        lang:<span id="lang-label">PT</span>
+      </button>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+        [menu]
+      </button>
+    </div>
   </div>
 </nav>
 
 <script>
+  const LANG_KEY = 'site-lang';
+
+  function getLang(): string {
+    return localStorage.getItem(LANG_KEY) || 'pt-BR';
+  }
+
+  function applyLang(lang: string) {
+    document.documentElement.setAttribute('data-lang', lang);
+    localStorage.setItem(LANG_KEY, lang);
+    const label = document.getElementById('lang-label');
+    if (label) label.textContent = lang === 'pt-BR' ? 'PT' : 'EN';
+  }
+
+  // Sync label with current preference on load
+  applyLang(getLang());
+
+  // Toggle
+  document.getElementById('lang-toggle')?.addEventListener('click', () => {
+    const next = getLang() === 'pt-BR' ? 'en' : 'pt-BR';
+    applyLang(next);
+    document.documentElement.dispatchEvent(new CustomEvent('langchange', { detail: next }));
+
+    // If on a translated blog post, navigate to the other language version
+    const translationUrl = (document.body as HTMLElement).dataset.translationUrl;
+    if (translationUrl) {
+      window.location.href = translationUrl;
+    }
+  });
+
+  // Mobile menu toggle
   const toggle = document.getElementById('nav-toggle');
-  const links = document.getElementById('nav-links');
+  const links  = document.getElementById('nav-links');
   toggle?.addEventListener('click', () => {
     const isOpen = links?.classList.toggle('open');
     toggle.setAttribute('aria-expanded', String(isOpen));
@@ -99,6 +134,30 @@ const currentPath = Astro.url.pathname;
   .nav-link.active {
     color: var(--green);
     background: rgba(0, 255, 135, 0.06);
+  }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .lang-toggle {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--amber);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    padding: 0.2rem 0.5rem;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: color 0.15s ease, border-color 0.15s ease;
+    white-space: nowrap;
+  }
+
+  .lang-toggle:hover {
+    color: var(--green);
+    border-color: var(--green);
   }
 
   .nav-toggle {

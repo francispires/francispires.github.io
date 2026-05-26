@@ -16,22 +16,32 @@ const categories = [...new Set(allPosts.map(p => p.data.category))].sort();
   <div class="content-container page-wrap">
 
     <div class="page-header">
-      <div class="section-header"><span>blog</span></div>
+      <div class="section-header">
+        <span class="lang-en">blog</span>
+        <span class="lang-pt">blog</span>
+      </div>
       <div class="post-count">
-        <span class="pd">$</span> ls -la ./blog/ | wc -l →
-        <span class="pn">{allPosts.length}</span> posts
+        <span class="pd">$</span>
+        <span class="lang-en">ls -la ./blog/ | wc -l →</span>
+        <span class="lang-pt">ls -la ./blog/ | wc -l →</span>
+        <span class="pn" id="post-count">{allPosts.length}</span>
+        <span class="lang-en">posts</span>
+        <span class="lang-pt">posts</span>
       </div>
     </div>
 
     <div class="cat-filter">
-      <a href="/blog" class="cat-btn active">all</a>
+      <a href="/blog" class="cat-btn active" data-cat="all">
+        <span class="lang-en">all</span>
+        <span class="lang-pt">todos</span>
+      </a>
       {categories.map(cat => (
-        <a href={`/blog/category/${cat}`} class="cat-btn">{cat}</a>
+        <a href={`/blog/category/${cat}`} class="cat-btn" data-cat={cat}>{cat}</a>
       ))}
     </div>
 
     {allPosts.length > 0 ? (
-      <div class="posts-list">
+      <div class="posts-list" id="posts-list">
         {allPosts.map(p => (
           <PostCard
             slug={p.slug}
@@ -47,11 +57,37 @@ const categories = [...new Set(allPosts.map(p => p.data.category))].sort();
     ) : (
       <p class="empty">
         <span class="pd">$</span>
-        <span style="color: var(--text-muted)">// No published posts yet.</span>
+        <span class="lang-en" style="color: var(--text-muted)">// No published posts yet.</span>
+        <span class="lang-pt" style="color: var(--text-muted)">// Nenhum post publicado ainda.</span>
       </p>
     )}
   </div>
 </BaseLayout>
+
+<script>
+  function filterPosts() {
+    const lang = localStorage.getItem('site-lang') || 'pt-BR';
+    const cards = document.querySelectorAll<HTMLElement>('.post-card[data-post-lang]');
+    let visible = 0;
+    cards.forEach(card => {
+      const matches = card.dataset.postLang === lang;
+      card.style.display = matches ? '' : 'none';
+      if (matches) visible++;
+    });
+    const counter = document.getElementById('post-count');
+    if (counter) counter.textContent = String(visible);
+  }
+
+  filterPosts();
+
+  // Re-filter when language toggles
+  document.documentElement.addEventListener('langchange', filterPosts);
+
+  // Also watch storage changes from other tabs
+  window.addEventListener('storage', e => {
+    if (e.key === 'site-lang') filterPosts();
+  });
+</script>
 
 <style>
   .page-wrap { padding-top: 3rem; padding-bottom: 4rem; }

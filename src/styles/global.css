@@ -44,6 +44,11 @@ body {
   flex-direction: column;
 }
 
+/* ── Language visibility ──────────────────────────────────────────────── */
+/* Applied via data-lang on <html>, set before paint by inline script    */
+:root[data-lang="en"]    .lang-pt { display: none !important; }
+:root[data-lang="pt-BR"] .lang-en { display: none !important; }
+
 main {
   flex: 1;
   padding-top: var(--nav-height);

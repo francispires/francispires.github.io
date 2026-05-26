@@ -5,9 +5,10 @@ import SkillBar from '../components/SkillBar.astro';
 import TypewriterHero from '../components/TypewriterHero.astro';
 import { getCollection } from 'astro:content';
 
+// Fetch more than needed so filtering by language still shows ~3 posts
 const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-  .slice(0, 6);
+  .slice(0, 20);
 
 const skills = [
   { name: 'Python',         pct: 85, color: 'var(--cyan)'  },
@@ -61,11 +62,12 @@ const skills = [
       <div class="container">
         <div class="section-header">
           <span>
-            recent posts
-            <a href="/blog" class="sh-more">→ all</a>
+            <span class="lang-en">recent posts</span>
+            <span class="lang-pt">posts recentes</span>
+            <a href="/blog" class="sh-more">→ <span class="lang-en">all</span><span class="lang-pt">todos</span></a>
           </span>
         </div>
-        <div class="posts-list">
+        <div class="posts-list" id="home-posts">
           {posts.map(p => (
             <PostCard
               slug={p.slug}
@@ -176,3 +178,19 @@ const skills = [
 
   .no-posts { font-size: 0.875rem; line-height: 2; }
 </style>
+
+<script>
+  function filterHomePosts() {
+    const lang = localStorage.getItem('site-lang') || 'pt-BR';
+    const cards = document.querySelectorAll<HTMLElement>('#home-posts .post-card[data-post-lang]');
+    let shown = 0;
+    cards.forEach(card => {
+      const matches = card.dataset.postLang === lang && shown < 6;
+      card.style.display = matches ? '' : 'none';
+      if (matches) shown++;
+    });
+  }
+
+  filterHomePosts();
+  document.documentElement.addEventListener('langchange', filterHomePosts);
+</script>

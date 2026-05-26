@@ -9,17 +9,25 @@ interface Props {
   description: string;
   image?: string;
   lang?: string;
+  translationUrl?: string;
 }
 
-const { title, description, image, lang = 'en' } = Astro.props;
+const { title, description, image, lang = 'en', translationUrl } = Astro.props;
 ---
 
 <!doctype html>
 <html lang={lang}>
   <head>
     <BaseHead title={title} description={description} image={image} />
+    <!-- Runs before paint to avoid language flash -->
+    <script is:inline>
+      (function () {
+        var l = localStorage.getItem('site-lang') || 'pt-BR';
+        document.documentElement.setAttribute('data-lang', l);
+      })();
+    </script>
   </head>
-  <body>
+  <body data-translation-url={translationUrl}>
     <Nav />
     <main>
       <slot />

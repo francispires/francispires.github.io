@@ -1,9 +1,14 @@
 #!/usr/bin/env node
 /**
- * AI-assisted blog post generator.
+ * AI-assisted blog post generator / revisor.
+ *
+ * Modes:
+ *   generate  AI writes a full post from a topic (default)
+ *   revise    You write the draft, AI refines it — formats, improves, adds diagrams
  *
  * Usage:
- *   npm run new-post -- --topic "dbt + DuckDB" --category data-engineering --lang both
+ *   npm run new-post -- --mode generate --topic "dbt + DuckDB" --category data-engineering --lang both
+ *   npm run new-post -- --mode revise --input ./drafts/my-idea.md --category python --lang both
  *   npm run new-post   (interactive wizard)
  *
  * Requires in .env:
@@ -14,8 +19,8 @@
 import Anthropic from '@anthropic-ai/sdk';
 import slugify from 'slugify';
 import { config } from 'dotenv';
-import { writeFileSync, existsSync, mkdirSync } from 'node:fs';
-import { join, dirname } from 'node:path';
+import { writeFileSync, readFileSync, existsSync, mkdirSync } from 'node:fs';
+import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createWriteStream } from 'node:fs';
 import { pipeline } from 'node:stream/promises';
@@ -26,7 +31,7 @@ import ora from 'ora';
 config();
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const ROOT = join(__dirname, '..');
+const ROOT     = join(__dirname, '..');
 const BLOG_DIR = join(ROOT, 'src/content/blog');
 const IMG_DIR  = join(ROOT, 'public/img/posts');
 
@@ -58,66 +63,104 @@ function parseArgs() {
 
 async function askMissing(args) {
   const questions = [];
+  const onCancel = () => { console.log(chalk.yellow('\nCancelled.')); process.exit(0); };
 
-  if (!args.topic) {
-    questions.push({
+  if (!args.mode) {
+    const { mode } = await prompts({
+      type: 'select',
+      name: 'mode',
+      message: 'How do you want to create this post?',
+      choices: [
+        { title: 'Generate — AI writes from a topic', value: 'generate' },
+        { title: 'Revise  — I wrote a draft, AI polishes it', value: 'revise' },
+      ],
+    }, { onCancel });
+    args.mode = mode;
+  }
+
+  if (args.mode === 'revise' && !args.input) {
+    const { input } = await prompts({
+      type: 'text',
+      name: 'input',
+      message: 'Path to your draft file (e.g. drafts/my-post.md):',
+      validate: v => {
+        const p = resolve(ROOT, v.trim());
+        return existsSync(p) ? true : `File not found: ${p}`;
+      },
+    }, { onCancel });
+    args.input = input;
+  }
+
+  if (args.mode === 'generate' && !args.topic) {
+    const { topic } = await prompts({
       type: 'text',
       name: 'topic',
       message: 'Post topic:',
       validate: v => v.length > 3 || 'Need at least a few words',
-    });
+    }, { onCancel });
+    args.topic = topic;
   }
 
   if (!args.category) {
-    questions.push({
+    const { category } = await prompts({
       type: 'select',
       name: 'category',
       message: 'Category:',
       choices: CATEGORIES.map(c => ({ title: c, value: c })),
-    });
+    }, { onCancel });
+    args.category = category;
   }
 
   if (!args.lang) {
-    questions.push({
+    const { lang } = await prompts({
       type: 'select',
       name: 'lang',
       message: 'Language:',
+      initial: 2,
       choices: [
-        { title: 'English only', value: 'en' },
-        { title: 'Portuguese only', value: 'pt-BR' },
-        { title: 'Both (bilingual pair)', value: 'both' },
+        { title: 'Portuguese only',       value: 'pt-BR' },
+        { title: 'English only',          value: 'en'    },
+        { title: 'Both (bilingual pair)', value: 'both'  },
       ],
-    });
+    }, { onCancel });
+    args.lang = lang;
   }
 
   if (!args.image) {
-    questions.push({
+    const { image } = await prompts({
       type: 'confirm',
       name: 'image',
       message: 'Fetch hero image from Unsplash?',
       initial: !!process.env.UNSPLASH_ACCESS_KEY,
-    });
+    }, { onCancel });
+    args.image = image;
   }
 
-  const answers = await prompts(questions, {
-    onCancel: () => { console.log(chalk.yellow('\nCancelled.')); process.exit(0); },
-  });
-
-  return { ...args, ...answers };
+  return args;
 }
 
-// ─── Claude API ──────────────────────────────────────────────────────────────
+// ─── Read draft file ─────────────────────────────────────────────────────────
 
-const SYSTEM_PROMPT = `You are a technical blog writer for Francis Pires, a Brazilian developer and data analyst.
+function readDraft(input) {
+  const p = resolve(ROOT, input.trim());
+  if (!existsSync(p)) {
+    console.error(chalk.red(`Draft file not found: ${p}`));
+    process.exit(1);
+  }
+  return readFileSync(p, 'utf8');
+}
+
+// ─── Claude API — generate ───────────────────────────────────────────────────
+
+const GENERATE_SYSTEM = `You are a technical blog writer for Francis Pires, a Brazilian developer and data analyst.
 Writing style: clear, direct, no fluff. Practical code examples where relevant.
 Use Markdown with proper headings (##, ###). Code blocks with language tags.
 Never add a preamble like "Here is the post" — output only the requested JSON.`;
 
-function buildPrompt(topic, category, lang) {
-  const langNote =
-    lang === 'pt-BR'
-      ? 'Write the entire post in Brazilian Portuguese (pt-BR).'
-      : 'Write the entire post in English.';
+function buildGeneratePrompt(topic, category, lang) {
+  const langNote = lang === 'pt-BR'
+    ? 'Write the entire post in Brazilian Portuguese (pt-BR).'
+    : 'Write the entire post in English.';
 
   return `Generate a technical blog post.
 
@@ -144,55 +187,91 @@ Rules:
 - "unsplashQuery" is 2–4 words for an Unsplash image search`;
 }
 
-async function generatePost(client, topic, category, lang) {
-  const spinner = ora(`Generating ${lang === 'pt-BR' ? 'pt-BR' : 'EN'} post with Claude...`).start();
+// ─── Claude API — revise ─────────────────────────────────────────────────────
+
+const REVISE_SYSTEM = `You are a professional technical editor for Francis Pires, a Brazilian developer and data analyst.
+Your job: take the author's rough draft and transform it into a polished, professional blog post.
+
+Non-negotiable rules:
+- Preserve the author's voice, opinions, and all factual content — never invent facts
+- Improve clarity, structure, grammar, and flow
+- Add proper Markdown headings (##, ###) to create a clear reading structure
+- Format any code snippets into fenced code blocks with the correct language tag
+- Where the text describes a process, flow, or architecture, insert a Mermaid diagram as a fenced \`\`\`mermaid block
+- Do not pad with generic filler phrases
+- Output only the requested JSON — no preamble`;
+
+function buildRevisePrompt(draftText, category, lang) {
+  const langNote = lang === 'pt-BR'
+    ? 'The final post must be in Brazilian Portuguese (pt-BR). Translate if the draft is in another language, keeping the author\'s meaning.'
+    : 'The final post must be in English. Translate if the draft is in another language, keeping the author\'s meaning.';
+
+  return `Revise and polish this author draft into a professional blog post.
+
+Category: ${category}
+${langNote}
+
+Author's draft:
+---
+${draftText}
+---
+
+Return ONLY valid JSON (no markdown wrapper) with this shape:
+{
+  "title": "...",
+  "description": "...",
+  "tags": ["tag1", "tag2", "tag3"],
+  "body": "...",
+  "unsplashQuery": "..."
+}
+
+Rules:
+- "title": clear, engaging — derived from the author's content, not invented
+- "description": 1–2 sentence SEO summary of what the author wrote
+- "tags": 3–5 lowercase slugs matching the content
+- "body": full polished Markdown — keep the author's voice and ideas, improve everything else; add \`\`\`mermaid diagrams where a flow or architecture is described
+- "unsplashQuery": 2–4 words for a relevant Unsplash image`;
+}
+
+// ─── API call (shared) ────────────────────────────────────────────────────────
+
+async function callClaude(client, system, userPrompt, label) {
+  const spinner = ora(label).start();
   try {
     const msg = await client.messages.create({
       model: 'claude-opus-4-5',
       max_tokens: 4096,
-      system: SYSTEM_PROMPT,
-      messages: [{ role: 'user', content: buildPrompt(topic, category, lang) }],
+      system,
+      messages: [{ role: 'user', content: userPrompt }],
     });
-
     const text = msg.content[0].text.trim();
-    // Strip markdown code fences if Claude added them
     const json = text.replace(/^```json?\n?/, '').replace(/\n?```$/, '');
     const result = JSON.parse(json);
-    spinner.succeed(`Post generated (${lang})`);
+    spinner.succeed(label.replace(/\.\.\.$/, '') + ' done');
     return result;
   } catch (err) {
-    spinner.fail('Generation failed');
+    spinner.fail(`Failed: ${label}`);
     throw err;
   }
 }
 
+// ─── Translation ──────────────────────────────────────────────────────────────
+
 async function translatePost(client, result, targetLang) {
-  const spinner = ora(`Translating to ${targetLang}...`).start();
-  try {
-    const langLabel = targetLang === 'pt-BR' ? 'Brazilian Portuguese' : 'English';
-    const msg = await client.messages.create({
-      model: 'claude-opus-4-5',
-      max_tokens: 4096,
-      system: SYSTEM_PROMPT,
-      messages: [{
-        role: 'user',
-        content: `Translate and adapt this blog post to ${langLabel}.
-Keep code blocks unchanged. Adapt idioms naturally — don't translate mechanically.
+  const langLabel = targetLang === 'pt-BR' ? 'Brazilian Portuguese' : 'English';
+  const prompt = `Translate and adapt this blog post to ${langLabel}.
+Keep code blocks and Mermaid diagrams unchanged. Adapt idioms naturally — do not translate mechanically.
 Return ONLY valid JSON with the same shape: { title, description, tags, body, unsplashQuery }
 
 Original post JSON:
-${JSON.stringify(result)}`,
-      }],
-    });
-    const text = msg.content[0].text.trim();
-    const json = text.replace(/^```json?\n?/, '').replace(/\n?```$/, '');
-    const translated = JSON.parse(json);
-    spinner.succeed(`Translated to ${targetLang}`);
-    return translated;
-  } catch (err) {
-    spinner.fail('Translation failed');
-    throw err;
-  }
+${JSON.stringify(result)}`;
+
+  return callClaude(
+    client,
+    GENERATE_SYSTEM,
+    prompt,
+    `Translating to ${targetLang}...`,
+  );
 }
 
 // ─── Unsplash image ──────────────────────────────────────────────────────────
@@ -217,12 +296,10 @@ async function fetchHeroImage(query, slug) {
 
     const photo = data.results[0];
     const downloadUrl = `${photo.urls.regular}&w=1200&q=80`;
-    const ext = 'jpg';
-    const filename = `${slug}.${ext}`;
+    const filename = `${slug}.jpg`;
     const filepath = join(IMG_DIR, filename);
 
     mkdirSync(IMG_DIR, { recursive: true });
-
     const imgRes = await fetch(downloadUrl);
     await pipeline(imgRes.body, createWriteStream(filepath));
 
@@ -236,7 +313,7 @@ async function fetchHeroImage(query, slug) {
 
 // ─── File writing ─────────────────────────────────────────────────────────────
 
-function buildFrontmatter({ title, description, pubDate, lang, translationKey, category, tags, heroImage }) {
+function buildFrontmatter({ title, description, pubDate, lang, translationKey, category, tags, heroImage, authored }) {
   const lines = [
     '---',
     `title: ${JSON.stringify(title)}`,
@@ -248,12 +325,13 @@ function buildFrontmatter({ title, description, pubDate, lang, translationKey, c
   lines.push(`category: ${category}`);
   lines.push(`tags: [${tags.map(t => JSON.stringify(t)).join(', ')}]`);
   lines.push('draft: true');
+  if (authored) lines.push('authored: true');
   if (heroImage) lines.push(`heroImage: ${JSON.stringify(heroImage)}`);
   lines.push('---', '');
   return lines.join('\n');
 }
 
-function writePost({ result, lang, category, translationKey, heroImage, slug, date }) {
+function writePost({ result, lang, category, translationKey, heroImage, slug, date, authored }) {
   const frontmatter = buildFrontmatter({
     title: result.title,
     description: result.description,
@@ -263,6 +341,7 @@ function writePost({ result, lang, category, translationKey, heroImage, slug, da
     category,
     tags: result.tags,
     heroImage,
+    authored,
   });
 
   const suffix = lang === 'pt-BR' ? '-pt' : '';
@@ -286,53 +365,74 @@ async function main() {
   let args = parseArgs();
   args = await askMissing(args);
 
-  const { topic, category, lang, image: wantImage } = args;
-  const client = new Anthropic();
+  const { mode, topic, input, category, lang, image: wantImage } = args;
+  const client  = new Anthropic();
+  const date    = new Date().toISOString().split('T')[0];
+  const isBilingual  = lang === 'both';
+  const primaryLang  = isBilingual ? 'pt-BR' : lang;
+  const isRevise     = mode === 'revise';
 
-  const date = new Date().toISOString().split('T')[0];
-  const isBilingual = lang === 'both';
-  const primaryLang = isBilingual ? 'en' : lang;
-
-  // Generate primary post
-  const primary = await generatePost(client, topic, category, primaryLang);
-
-  // Generate secondary post (translation) if bilingual
-  let secondary = null;
-  if (isBilingual) {
-    secondary = await translatePost(client, primary, 'pt-BR');
+  // ── Generate or revise primary post
+  let primary;
+  if (isRevise) {
+    const draftText = readDraft(input);
+    primary = await callClaude(
+      client,
+      REVISE_SYSTEM,
+      buildRevisePrompt(draftText, category, primaryLang),
+      'Revising your draft with Claude...',
+    );
+  } else {
+    primary = await callClaude(
+      client,
+      GENERATE_SYSTEM,
+      buildGeneratePrompt(topic, category, primaryLang),
+      'Generating post with Claude...',
+    );
   }
 
-  // Slugify from English title
+  // ── Translate if bilingual (primary is pt-BR, translate to EN)
+  let secondary = null;
+  if (isBilingual) {
+    secondary = await translatePost(client, primary, 'en');
+  }
+
   const slug = slugify(primary.title, { lower: true, strict: true });
   const translationKey = isBilingual ? slug : undefined;
 
-  // Fetch hero image (shared between both language versions)
+  // ── Hero image
   let heroImage = null;
   if (wantImage) {
     heroImage = await fetchHeroImage(primary.unsplashQuery, slug);
   }
 
-  // Write files
+  // ── Write files
   mkdirSync(BLOG_DIR, { recursive: true });
 
-  const enFile = writePost({ result: primary, lang: primaryLang, category, translationKey, heroImage, slug, date });
+  const enFile = writePost({
+    result: primary, lang: primaryLang, category,
+    translationKey, heroImage, slug, date, authored: isRevise,
+  });
 
   let ptFile = null;
   if (secondary) {
-    ptFile = writePost({ result: secondary, lang: 'pt-BR', category, translationKey, heroImage, slug, date });
+    ptFile = writePost({
+      result: secondary, lang: 'pt-BR', category,
+      translationKey, heroImage, slug, date, authored: isRevise,
+    });
   }
 
-  // Summary
+  // ── Summary
   console.log('\n' + chalk.green('✓ Done!\n'));
   console.log(chalk.dim('Files created:'));
   console.log('  ' + chalk.cyan(`src/content/blog/${enFile.filename}`));
   if (ptFile) console.log('  ' + chalk.cyan(`src/content/blog/${ptFile.filename}`));
 
   console.log('\n' + chalk.dim('Next steps:'));
-  console.log('  1. ' + chalk.white('Review and edit the draft(s)'));
+  console.log('  1. ' + chalk.white('Review the output — check facts, voice, diagrams'));
   console.log('  2. ' + chalk.white('npm run dev') + chalk.dim('  →  http://localhost:4321'));
   console.log('  3. ' + chalk.white('Set') + chalk.cyan(' draft: false') + chalk.white(' when ready to publish'));
-  console.log('  4. ' + chalk.white('git add src/content/blog/ && git commit -m "post: ' + primary.title + '"'));
+  console.log('  4. ' + chalk.white(`git add src/content/blog/ && git commit -m "post: ${primary.title}"`));
   console.log('  5. ' + chalk.white('git push origin master') + chalk.dim('  →  GitHub Actions deploys in ~60s\n'));
 }
 

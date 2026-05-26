@@ -14,7 +14,7 @@ const { title, description, pubDate, updatedDate, tags, category, lang, heroImag
 const dateStr = pubDate.toISOString().split('T')[0];
 ---
 
-<BaseLayout title={title} description={description} image={heroImage} lang={lang}>
+<BaseLayout title={title} description={description} image={heroImage} lang={lang} translationUrl={translationUrl}>
   <div class="content-container post-page">
 
     <div class="post-breadcrumb">
@@ -25,7 +25,8 @@ const dateStr = pubDate.toISOString().split('T')[0];
 
     {translationUrl && (
       <div class="post-translation">
-        <span class="tr-label">→ read in</span>
+        <span class="tr-label lang-en">→ read in</span>
+        <span class="tr-label lang-pt">→ ler em</span>
         <a href={translationUrl} class="tr-link">
           {lang === 'en' ? 'Português (pt-BR)' : 'English'}
         </a>
@@ -62,6 +63,11 @@ const dateStr = pubDate.toISOString().split('T')[0];
     <GiscusComments />
   </div>
 </BaseLayout>
+
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({ startOnLoad: true, theme: 'dark', darkMode: true });
+</script>
 
 <style>
   .post-page {
