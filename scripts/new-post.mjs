@@ -39,14 +39,14 @@ const CONFIG_PATH = join(ROOT, 'src/content/config.ts');
 
 function loadCategories() {
   const src = readFileSync(CONFIG_PATH, 'utf8');
-  const match = src.match(/\.enum\(\[([^\]]+)\]\)/);
+  const match = src.match(/category:[\s\S]*?\.enum\(\[([^\]]+)\]\)/);
   if (!match) return ['misc'];
   return match[1].split(',').map(s => s.trim().replace(/'/g, ''));
 }
 
 function addCategoryToSchema(newCat) {
   let src = readFileSync(CONFIG_PATH, 'utf8');
-  src = src.replace(/(\.enum\(\[[^\]]+)(\]\))/, `$1, '${newCat}'$2`);
+  src = src.replace(/(category:[\s\S]*?\.enum\(\[[^\]]+)(\]\))/, `$1, '${newCat}'$2`);
   writeFileSync(CONFIG_PATH, src);
 }
 
