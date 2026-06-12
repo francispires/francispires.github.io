@@ -7,6 +7,11 @@ tech: ["C", "C++", "Java", "Python", "Data Structures", "Algorithms"]
 github: "https://github.com/francispires"
 featured: true
 order: 1
+category: "typescript"
+position: "Student Engineer"
+company: "FIAP"
+startDate: "2013-01"
+endDate: "2018-12"
 ---
 
 <div class="lang-en">

@@ -1,0 +1,168 @@
+# Creating New Blog Posts
+
+This site uses an AI-assisted post creation script that handles content generation, revision, translation, and hero image fetching in a single workflow.
+
+---
+
+## Prerequisites
+
+Make sure your `.env` file has the required keys:
+
+```env
+ANTHROPIC_API_KEY=sk-ant-...        # required — Claude API for generation/translation
+UNSPLASH_ACCESS_KEY=...             # optional — auto-fetch hero images
+```
+
+---
+
+## The command
+
+```bash
+npm run new-post
+```
+
+Run it from the project root. The script opens an interactive wizard. All options can also be passed as flags to skip prompts.
+
+---
+
+## Modes
+
+### `generate` — AI writes the post from a topic
+
+Use this when you have an idea but no draft yet.
+
+```bash
+npm run new-post -- --mode generate --topic "Indexing strategies in PostgreSQL" --category sql --lang both
+```
+
+The AI (Claude Opus) will:
+1. Write a full post with title, description, tags, and body
+2. Format code blocks with language tags
+3. Add Mermaid diagrams where relevant
+4. Translate to the second language if `--lang both`
+5. Fetch a hero image from Unsplash (if `UNSPLASH_ACCESS_KEY` is set)
+
+### `revise` — AI polishes your draft
+
+Use this when you have a rough draft and want it cleaned up without losing your voice.
+
+```bash
+npm run new-post -- --mode revise --input ./drafts/my-draft.md --category python --lang both
+```
+
+**Writing the draft — no special format required.** Just write plain text or rough markdown in any language. The script reads the file as-is and passes the raw content to Claude. You can write:
+
+- Plain prose paragraphs (no headings, no frontmatter)
+- Partial markdown with some headings already in place
+- A mix of Portuguese and English — the AI translates to whichever language you select
+- Code snippets without fences — the AI will add the language tags
+- Descriptions of flows or architectures in plain text — the AI will generate Mermaid diagrams
+
+Save the file anywhere (convention: `drafts/my-draft.md`) and the wizard will ask for the path:
+
+```
+Path to your draft file (e.g. drafts/my-post.md): drafts/my-draft.md
+```
+
+It validates that the file exists before continuing. The AI will:
+1. Preserve your facts and voice
+2. Fix grammar, structure, and clarity
+3. Add `##`/`###` headings
+4. Tag code blocks with the correct language
+5. Insert Mermaid diagrams for any flows or architectures you describe
+6. Translate and generate hero image same as generate mode
+
+---
+
+## Language options
+
+| Flag | Behavior |
+|------|----------|
+| `--lang pt` | Portuguese only (`pt-BR`) |
+| `--lang en` | English only |
+| `--lang both` | Creates both files, linked via `translationKey` |
+
+When `--lang both` is used, the script creates two files with the same `translationKey` frontmatter field so the site links them as translations of each other.
+
+---
+
+## Output files
+
+Files are created in `src/content/blog/` following the pattern:
+
+```
+src/content/blog/
+  2026-06-12-indexing-postgresql.md        ← English
+  2026-06-12-indexing-postgresql-pt.md     ← Portuguese
+```
+
+Hero images (if fetched) land in `public/img/posts/`.
+
+---
+
+## Frontmatter reference
+
+The script generates all frontmatter automatically. For manual posts, these fields are required:
+
+```yaml
+---
+title: "Indexing Strategies in PostgreSQL"
+description: "A practical guide to B-tree, GIN, and partial indexes."
+pubDate: 2026-06-12
+lang: en                        # en | pt-BR
+category: sql                   # see enum below
+tags: ["postgresql", "indexing", "performance"]
+draft: true                     # flip to false when ready to publish
+---
+```
+
+Optional fields:
+
+```yaml
+translationKey: indexing-postgresql   # auto-set for bilingual posts
+heroImage: /img/posts/indexing.jpg
+heroAlt: "A diagram of a B-tree index"
+updatedDate: 2026-06-15
+authored: true                        # set in revise mode (you wrote the draft)
+```
+
+### Valid categories
+
+```
+csharp · typescript · data-engineering · python · sql
+javascript · devops · math · misc · leadership
+```
+
+To add a new category, the wizard will ask you during `npm run new-post` and update `src/content/config.ts` automatically.
+
+---
+
+## After the script runs
+
+1. **Review the file** — check facts, code, and any generated Mermaid diagrams
+2. **Preview locally**:
+   ```bash
+   npm run dev
+   # open http://localhost:4321
+   ```
+3. **Set `draft: false`** in the frontmatter when the post is ready
+4. **Commit and push**:
+   ```bash
+   git add src/content/blog/ src/content/config.ts public/img/posts/
+   git commit -m "post: Indexing Strategies in PostgreSQL"
+   git push origin master
+   ```
+   GitHub Actions picks it up and deploys in ~60 seconds.
+
+---
+
+## Quick reference
+
+| What | Where |
+|------|-------|
+| Creation script | `scripts/new-post.mjs` |
+| Content schema | `src/content/config.ts` |
+| Blog posts | `src/content/blog/` |
+| Hero images | `public/img/posts/` |
+| Draft input folder | `drafts/` |
+| Environment keys | `.env` |

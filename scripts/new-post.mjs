@@ -32,8 +32,9 @@ config();
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT     = join(__dirname, '..');
-const BLOG_DIR = join(ROOT, 'src/content/blog');
-const IMG_DIR  = join(ROOT, 'public/img/posts');
+const BLOG_DIR     = join(ROOT, 'src/content/blog');
+const PROJECTS_DIR = join(ROOT, 'src/content/projects');
+const IMG_DIR      = join(ROOT, 'public/img/posts');
 
 const CONFIG_PATH = join(ROOT, 'src/content/config.ts');
 
@@ -76,12 +77,16 @@ async function askMissing(args) {
       name: 'mode',
       message: 'How do you want to create this post?',
       choices: [
-        { title: 'Generate — AI writes from a topic', value: 'generate' },
-        { title: 'Revise  — I wrote a draft, AI polishes it', value: 'revise' },
+        { title: 'Generate — AI writes from a topic',         value: 'generate' },
+        { title: 'Revise  — I wrote a draft, AI polishes it', value: 'revise'   },
+        { title: 'Project — create a new CV project entry',   value: 'project'  },
       ],
     }, { onCancel });
     args.mode = mode;
   }
+
+  // Project mode needs its own prompts — skip blog-specific questions
+  if (args.mode === 'project') return args;
 
   if (args.mode === 'revise' && !args.input) {
     const { input } = await prompts({
@@ -376,6 +381,105 @@ function writePost({ result, lang, category, translationKey, heroImage, slug, da
   return { filename, filepath };
 }
 
+// ─── Project mode ────────────────────────────────────────────────────────────
+
+async function askProjectDetails() {
+  const onCancel = () => { console.log(chalk.yellow('\nCancelled.')); process.exit(0); };
+  const cats = loadCategories();
+
+  return prompts([
+    {
+      type: 'text', name: 'title',
+      message: 'Project title (EN):',
+      validate: v => v.trim().length > 2 || 'Required',
+    },
+    {
+      type: 'text', name: 'titlePt',
+      message: 'Project title (PT, blank to skip):',
+    },
+    {
+      type: 'text', name: 'description',
+      message: 'Short description (EN):',
+      validate: v => v.trim().length > 5 || 'Required',
+    },
+    {
+      type: 'text', name: 'descriptionPt',
+      message: 'Short description (PT, blank to skip):',
+    },
+    {
+      type: 'text', name: 'position',
+      message: 'Position/role (e.g. Lead Developer, blank to skip):',
+    },
+    {
+      type: 'text', name: 'company',
+      message: 'Company/organization (blank to skip):',
+    },
+    {
+      type: 'text', name: 'startDate',
+      message: 'Start date (YYYY-MM, blank to skip):',
+      validate: v => !v.trim() || /^\d{4}-\d{2}$/.test(v.trim()) || 'Format: YYYY-MM',
+    },
+    {
+      type: 'text', name: 'endDate',
+      message: 'End date (YYYY-MM, blank = present):',
+      validate: v => !v.trim() || /^\d{4}-\d{2}$/.test(v.trim()) || 'Format: YYYY-MM',
+    },
+    {
+      type: 'select', name: 'category',
+      message: 'Category:',
+      choices: cats.map(c => ({ title: c, value: c })),
+    },
+    {
+      type: 'text', name: 'tech',
+      message: 'Tech tags (comma-separated, e.g. Python, SQL, dbt):',
+      validate: v => v.trim().length > 0 || 'At least one tag required',
+    },
+    {
+      type: 'text', name: 'github',
+      message: 'GitHub URL (blank to skip):',
+    },
+    {
+      type: 'text', name: 'url',
+      message: 'Project URL (blank to skip):',
+    },
+    {
+      type: 'confirm', name: 'featured',
+      message: 'Featured project?',
+      initial: false,
+    },
+  ], { onCancel });
+}
+
+function writeProject(details, date) {
+  const slug     = slugify(details.title, { lower: true, strict: true });
+  const filename = `${date}-${slug}.md`;
+  const filepath = join(PROJECTS_DIR, filename);
+  const tech     = details.tech.split(',').map(t => t.trim()).filter(Boolean);
+
+  const lines = ['---'];
+  lines.push(`title: ${JSON.stringify(details.title)}`);
+  if (details.titlePt?.trim())       lines.push(`titlePt: ${JSON.stringify(details.titlePt.trim())}`);
+  lines.push(`description: ${JSON.stringify(details.description)}`);
+  if (details.descriptionPt?.trim()) lines.push(`descriptionPt: ${JSON.stringify(details.descriptionPt.trim())}`);
+  lines.push(`tech: [${tech.map(t => JSON.stringify(t)).join(', ')}]`);
+  if (details.category)              lines.push(`category: "${details.category}"`);
+  if (details.position?.trim())      lines.push(`position: ${JSON.stringify(details.position.trim())}`);
+  if (details.company?.trim())       lines.push(`company: ${JSON.stringify(details.company.trim())}`);
+  if (details.startDate?.trim())     lines.push(`startDate: "${details.startDate.trim()}"`);
+  if (details.endDate?.trim())       lines.push(`endDate: "${details.endDate.trim()}"`);
+  if (details.github?.trim())        lines.push(`github: ${JSON.stringify(details.github.trim())}`);
+  if (details.url?.trim())           lines.push(`url: ${JSON.stringify(details.url.trim())}`);
+  lines.push(`featured: ${details.featured ? 'true' : 'false'}`);
+  lines.push('---', '');
+
+  lines.push('<div class="lang-en">', '', '## Overview', '', details.description.trim(), '', '</div>', '');
+  const descPt = details.descriptionPt?.trim() || details.description.trim();
+  lines.push('<div class="lang-pt">', '', '## Visão Geral', '', descPt, '', '</div>', '');
+
+  writeFileSync(filepath, lines.join('\n'));
+  return { filename, filepath };
+}
+
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
 async function main() {
@@ -388,6 +492,22 @@ async function main() {
 
   let args = parseArgs();
   args = await askMissing(args);
+
+  // ── Project mode — no AI needed
+  if (args.mode === 'project') {
+    const details = await askProjectDetails();
+    const date    = new Date().toISOString().split('T')[0];
+    mkdirSync(PROJECTS_DIR, { recursive: true });
+    const { filename } = writeProject(details, date);
+    console.log('\n' + chalk.green('✓ Project created!\n'));
+    console.log('  ' + chalk.cyan(`src/content/projects/${filename}`));
+    console.log('\n' + chalk.dim('Next steps:'));
+    console.log('  1. ' + chalk.white('Edit the file to add full content in both languages'));
+    console.log('  2. ' + chalk.white('npm run dev') + chalk.dim('  →  check /cv and /projects'));
+    console.log('  3. ' + chalk.white(`git add src/content/projects/${filename} && git commit -m "project: ${details.title}"`));
+    console.log('  4. ' + chalk.white('git push origin master\n'));
+    return;
+  }
 
   const { mode, topic, input, category, lang, image: wantImage, _newCategory } = args;
   const client  = new Anthropic();

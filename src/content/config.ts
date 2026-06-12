@@ -10,7 +10,7 @@ const blog = defineCollection({
     lang: z.enum(['en', 'pt-BR']).default('en'),
     translationKey: z.string().optional(),
     category: z
-      .enum(['csharp', 'typescript', 'data-engineering', 'python', 'sql', 'javascript', 'devops', 'math', 'misc', 'leadership'])
+      .enum(['csharp', 'typescript', 'data-engineering', 'python', 'sql', 'javascript', 'devops', 'math', 'misc', 'leadership', 'ai'])
       .default('misc'),
     tags: z.array(z.string()).default([]),
     draft: z.boolean().default(true),
@@ -34,6 +34,13 @@ const projects = defineCollection({
     imageAlt: z.string().optional(),
     featured: z.boolean().default(false),
     order: z.number().default(99),
+    category: z
+      .enum(['csharp', 'typescript', 'data-engineering', 'python', 'sql', 'javascript', 'devops', 'math', 'misc', 'leadership', 'ai'])
+      .optional(),
+    startDate: z.string().optional(),
+    endDate: z.string().optional(),
+    position: z.string().optional(),
+    company: z.string().optional(),
   }),
 });
 

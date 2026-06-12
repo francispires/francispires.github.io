@@ -19,6 +19,11 @@ function remarkMermaid() {
 
 export default defineConfig({
   site: 'https://www.francispires.com.br',
+  vite: {
+    optimizeDeps: {
+      include: ['pdfmake/build/pdfmake', 'pdfmake/build/vfs_fonts'],
+    },
+  },
   integrations: [
     tailwind({ applyBaseStyles: false }),
     mdx(),

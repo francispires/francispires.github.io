@@ -5,6 +5,11 @@ description: "Customization and deployment of Open edX, the open-source learning
 descriptionPt: "Customização e implantação do Open edX, o sistema de gerenciamento de aprendizagem de código aberto utilizado pelo MIT, Harvard e milhares de instituições no mundo."
 tech: ["Python", "Django", "JavaScript", "Docker", "PostgreSQL", "Redis"]
 order: 4
+category: "devops"
+position: "DevOps Engineer"
+company: "FIA — Labfin Provar"
+startDate: "2021-03"
+endDate: "2022-12"
 ---
 
 <div class="lang-en">

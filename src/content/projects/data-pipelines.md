@@ -6,6 +6,11 @@ descriptionPt: "Trabalho de engenharia de dados end-to-end: ingestão, transform
 tech: ["Python", "SQL", "dbt", "Pandas", "DuckDB", "Power BI"]
 featured: true
 order: 3
+category: "data-engineering"
+position: "Lead Data Engineer"
+company: "FIA — Labfin Provar"
+startDate: "2022-01"
+endDate: "2024-09"
 ---
 
 <div class="lang-en">

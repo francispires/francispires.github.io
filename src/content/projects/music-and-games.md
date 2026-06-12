@@ -5,6 +5,10 @@ description: "Creative side projects: music composition and production, and expe
 descriptionPt: "Projetos pessoais criativos: composição e produção musical, e desenvolvimento experimental de games com foco em geração procedural."
 tech: ["MIDI", "Game Engines", "Procedural Generation", "Audio DSP"]
 order: 5
+category: "javascript"
+position: "Lead Software Engineer"
+company: "4PGamebased"
+startDate: "2020-06"
 ---
 
 <div class="lang-en">

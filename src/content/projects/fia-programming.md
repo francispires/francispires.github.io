@@ -6,6 +6,11 @@ descriptionPt: "Cursos práticos de programação na FIA Business School, com fo
 tech: ["Python", "JavaScript", "SQL", "Web Development"]
 featured: true
 order: 2
+category: "csharp"
+position: "Senior Software Engineer"
+company: "FIA"
+startDate: "2018-06"
+endDate: "2021-02"
 ---
 
 <div class="lang-en">

@@ -5,6 +5,9 @@ description: "Analog hobby: designing and building furniture and objects from wo
 descriptionPt: "Hobby analógico: projetar e construir móveis e objetos em madeira. Onde a precisão importa tanto quanto a criatividade."
 tech: ["MDF", "Plywood", "Hand Tools", "CNC Design", "SketchUp"]
 order: 6
+category: "misc"
+position: "Personal Project"
+startDate: "2019-01"
 ---
 
 <div class="lang-en">
