@@ -264,20 +264,22 @@ function catColor(cat: string): string {
       btn.disabled = true;
 
       try {
-        // Dynamic import — Vite code-splits pdfmake so it only loads on click
-        const [pdfMakeModule, pdfFontsModule] = await Promise.all([
-          import('pdfmake/build/pdfmake'),
-          import('pdfmake/build/vfs_fonts'),
-        ]);
-
+        // Load pdfmake FIRST, expose on window, then load vfs_fonts.
+        // vfs_fonts.js calls window.pdfMake.addVirtualFileSystem(vfs) when window.pdfMake
+        // is already set — this is the reliable VFS registration path in pdfmake 0.3.x.
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const pdfMake = (pdfMakeModule as any).default ?? pdfMakeModule;
-        // pdfmake 0.3.x: vfs_fonts default export IS the vfs object directly
+        const pdfMakeModule = await import('pdfmake/build/pdfmake');
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const pdfFonts = (pdfFontsModule as any).default ?? pdfFontsModule;
-        pdfMake.vfs = typeof pdfFonts === 'object' && 'Roboto-Regular.ttf' in pdfFonts
-          ? pdfFonts
-          : (pdfFonts?.pdfMake?.vfs ?? pdfFonts?.vfs ?? {});
+        const pdfMake: any = (pdfMakeModule as any).default ?? pdfMakeModule;
+        (window as any).pdfMake = pdfMake; // required so vfs_fonts can auto-register
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const pdfFontsModule = await import('pdfmake/build/vfs_fonts');
+        // Fallback: manually set vfs if auto-registration didn't fire
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const vfsDirect: any = (pdfFontsModule as any).default ?? pdfFontsModule;
+        if (vfsDirect && typeof vfsDirect === 'object' && !pdfMake.vfs?.['Roboto-Regular.ttf']) {
+          pdfMake.vfs = vfsDirect;
+        }
 
         const lang = document.documentElement.getAttribute('data-lang') === 'pt-BR' ? 'pt' : 'en';
         const activeCats = getActiveCats();
