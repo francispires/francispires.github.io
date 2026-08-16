@@ -35,6 +35,8 @@ import {
   callClaude,
   translatePost,
 } from './lib/claude.mjs';
+import { publishToLinkedIn } from './publishers/linkedin.mjs';
+import { publishToInstagram } from './publishers/instagram.mjs';
 
 config();
 
@@ -470,6 +472,44 @@ async function main() {
   console.log('  3. ' + chalk.white('Set') + chalk.cyan(' draft: false') + chalk.white(' when ready to publish'));
   console.log('  4. ' + chalk.white(`${gitAdd} && git commit -m "post: ${primary.title}"`));
   console.log('  5. ' + chalk.white('git push origin master') + chalk.dim('  →  GitHub Actions deploys in ~60s\n'));
+
+  // ── Social publishing
+  const destinations = await askDestinations(args);
+  const blogPost = {
+    title:         primary.title,
+    description:   primary.description,
+    tags:          primary.tags,
+    body:          primary.body,
+    unsplashQuery: primary.unsplashQuery,
+  };
+
+  if (destinations.linkedin)  await publishToLinkedIn({ blogPost, slug });
+  if (destinations.instagram) await publishToInstagram({ blogPost, slug });
+}
+
+async function askDestinations(args) {
+  if (args.platform) {
+    const p = args.platform;
+    return {
+      linkedin:  p === 'linkedin'  || p === 'all',
+      instagram: p === 'instagram' || p === 'all',
+    };
+  }
+  const onCancel = () => { console.log(chalk.yellow('\nCancelled.')); process.exit(0); };
+  const { destinations } = await prompts({
+    type:    'multiselect',
+    name:    'destinations',
+    message: 'Where do you want to publish?',
+    choices: [
+      { title: 'LinkedIn',  value: 'linkedin'  },
+      { title: 'Instagram', value: 'instagram' },
+    ],
+    hint: '(space to select, enter to confirm — site is always included)',
+  }, { onCancel });
+  return {
+    linkedin:  (destinations ?? []).includes('linkedin'),
+    instagram: (destinations ?? []).includes('instagram'),
+  };
 }
 
 main().catch(err => {
