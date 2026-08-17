@@ -122,9 +122,12 @@ export async function ensureLinkedInToken() {
   const code   = await waitForCode();
   const tokens = await exchangeCode(code, clientId, clientSecret);
   accessToken  = tokens.access_token;
-  personUrn    = await getPersonUrn(accessToken);
 
-  writeEnvKeys({ LINKEDIN_ACCESS_TOKEN: accessToken, LINKEDIN_PERSON_URN: personUrn });
+  // Save token immediately so a failure in getPersonUrn doesn't lose it
+  writeEnvKeys({ LINKEDIN_ACCESS_TOKEN: accessToken });
+
+  personUrn = await getPersonUrn(accessToken);
+  writeEnvKeys({ LINKEDIN_PERSON_URN: personUrn });
   console.log(chalk.green('LinkedIn token saved to .env'));
 
   return { accessToken, personUrn };
