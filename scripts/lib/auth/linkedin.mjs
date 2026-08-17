@@ -48,12 +48,43 @@ async function exchangeCode(code, clientId, clientSecret) {
 }
 
 async function getPersonUrn(accessToken) {
-  const res = await fetch('https://api.linkedin.com/v2/me', {
+  // Try OpenID Connect userinfo first (requires "Sign In with LinkedIn" product)
+  const uiRes = await fetch('https://api.linkedin.com/v2/userinfo', {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  if (uiRes.ok) {
+    const data = await uiRes.json();
+    if (data.sub) return `urn:li:person:${data.sub}`;
+  }
+
+  // Try classic /v2/me (requires r_liteprofile product)
+  const meRes = await fetch('https://api.linkedin.com/v2/me', {
     headers: { Authorization: `Bearer ${accessToken}`, 'X-Restli-Protocol-Version': '2.0.0' },
   });
-  if (!res.ok) throw new Error(`Failed to get LinkedIn profile: ${await res.text()}`);
-  const data = await res.json();
-  return `urn:li:person:${data.id}`;
+  if (meRes.ok) {
+    const data = await meRes.json();
+    if (data.id) return `urn:li:person:${data.id}`;
+  }
+
+  // Fallback: ask the user to paste their URN manually
+  console.log(chalk.yellow(
+    '\nCould not fetch your LinkedIn member ID automatically.\n' +
+    'Find it at: https://www.linkedin.com/developers/tools/oauth/token-inspector\n' +
+    '  1. Paste your access token in the inspector\n' +
+    '  2. Copy the "sub" (member ID) value\n' +
+    '  3. Paste it below (just the ID, e.g. abc123XYZ)\n',
+  ));
+
+  const { default: prompts } = await import('prompts');
+  const { memberId } = await prompts({
+    type:     'text',
+    name:     'memberId',
+    message:  'Your LinkedIn member ID:',
+    validate: v => v.trim().length > 0 || 'Required',
+  });
+
+  if (!memberId) throw new Error('LinkedIn member ID is required.');
+  return `urn:li:person:${memberId.trim()}`;
 }
 
 /**
