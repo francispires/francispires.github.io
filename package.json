@@ -8,6 +8,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "new-post": "node scripts/new-post.mjs",
+    "publish-post": "node scripts/publish-post.mjs",
     "test": "vitest run"
   },
   "devDependencies": {
