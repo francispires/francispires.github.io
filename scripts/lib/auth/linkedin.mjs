@@ -4,7 +4,7 @@ import { URL } from 'node:url';
 import { readEnvKey, writeEnvKeys } from '../env.mjs';
 import chalk from 'chalk';
 
-const SCOPES   = ['w_member_social'];
+const SCOPES   = ['openid', 'profile', 'w_member_social'];
 const PORT     = 3333;
 const REDIRECT = `http://localhost:${PORT}/callback`;
 
