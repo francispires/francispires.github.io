@@ -164,6 +164,30 @@ ${JSON.stringify(result)}`;
   return callClaude(client, GENERATE_SYSTEM, prompt, `Translating to ${targetLang}...`);
 }
 
+const REVISE_POST_SYSTEM = `You are editing a blog post markdown file for Francis Pires.
+Apply the requested changes and return the COMPLETE revised file — frontmatter YAML block and body.
+Rules:
+- Preserve every frontmatter key exactly (draft, lang, pubDate, heroImage, translationKey, etc.)
+- Only update title/description/body/tags if the feedback requires it
+- Return ONLY the raw markdown — no explanation, no code fences around the file`;
+
+export async function revisePostContent(client, markdownContent, feedback) {
+  const spinner = ora('Revising post with Claude...').start();
+  try {
+    const msg = await client.messages.create({
+      model:      'claude-opus-4-5',
+      max_tokens: 4096,
+      system:     REVISE_POST_SYSTEM,
+      messages:   [{ role: 'user', content: `Current file:\n\n${markdownContent}\n\nFeedback: ${feedback}` }],
+    });
+    spinner.succeed('Post revised');
+    return msg.content[0].text.trim();
+  } catch (err) {
+    spinner.fail('Revision failed');
+    throw err;
+  }
+}
+
 export async function adaptForLinkedIn(client, blogPost, slug) {
   return callClaude(
     client,

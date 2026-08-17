@@ -16,6 +16,7 @@ import prompts from 'prompts';
 import chalk from 'chalk';
 import { publishToLinkedIn } from './publishers/linkedin.mjs';
 import { publishToInstagram } from './publishers/instagram.mjs';
+import { publishToGit } from './lib/git.mjs';
 
 config();
 
@@ -128,6 +129,8 @@ async function main() {
 
   if (platforms.linkedin)  await publishToLinkedIn({ blogPost, slug });
   if (platforms.instagram) await publishToInstagram({ blogPost, slug });
+
+  await publishToGit({ title: blogPost.title });
 }
 
 main().catch(err => {

@@ -37,6 +37,8 @@ import {
 } from './lib/claude.mjs';
 import { publishToLinkedIn } from './publishers/linkedin.mjs';
 import { publishToInstagram } from './publishers/instagram.mjs';
+import { postReviewLoop } from './lib/post-review.mjs';
+import { publishToGit } from './lib/git.mjs';
 
 config();
 
@@ -452,26 +454,28 @@ async function main() {
     });
   }
 
-  // ── Summary
-  console.log('\n' + chalk.green('✓ Done!\n'));
-  console.log(chalk.dim('Files created:'));
-  console.log('  ' + chalk.cyan(`src/content/blog/${ptFile.filename}`));
-  if (enFile) console.log('  ' + chalk.cyan(`src/content/blog/${enFile.filename}`));
-
-  const gitAdd = _newCategory
-    ? 'git add src/content/blog/ src/content/config.ts'
-    : 'git add src/content/blog/';
-
   if (_newCategory) {
-    console.log('\n' + chalk.yellow('⚠  New category added — include config.ts in your commit or the CI build will fail.'));
+    console.log('\n' + chalk.yellow('⚠  New category added — config.ts will be included in the publish commit.'));
   }
 
-  console.log('\n' + chalk.dim('Next steps:'));
-  console.log('  1. ' + chalk.white('Review the output — check facts, voice, diagrams'));
-  console.log('  2. ' + chalk.white('npm run dev') + chalk.dim('  →  http://localhost:4321'));
-  console.log('  3. ' + chalk.white('Set') + chalk.cyan(' draft: false') + chalk.white(' when ready to publish'));
-  console.log('  4. ' + chalk.white(`${gitAdd} && git commit -m "post: ${primary.title}"`));
-  console.log('  5. ' + chalk.white('git push origin master') + chalk.dim('  →  GitHub Actions deploys in ~60s\n'));
+  // ── Review loop → publish
+  const shouldPublish = await postReviewLoop({
+    client,
+    slug,
+    date,
+    enFilePath: enFile?.filepath ?? null,
+    ptFilePath: ptFile.filepath,
+    isBilingual,
+    primaryResult: primary,
+  });
+
+  if (!shouldPublish) {
+    console.log(chalk.dim('\nPost saved as draft. Run "npm run publish-post" when ready.\n'));
+    return;
+  }
+
+  // ── Git publish
+  await publishToGit({ title: primary.title, includeConfig: !!_newCategory });
 
   // ── Social publishing
   const destinations = await askDestinations(args);
