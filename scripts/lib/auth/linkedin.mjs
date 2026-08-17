@@ -4,7 +4,7 @@ import { URL } from 'node:url';
 import { readEnvKey, writeEnvKeys } from '../env.mjs';
 import chalk from 'chalk';
 
-const SCOPES   = ['openid', 'profile', 'w_member_social'];
+const SCOPES   = ['w_member_social'];
 const PORT     = 3333;
 const REDIRECT = `http://localhost:${PORT}/callback`;
 
@@ -48,12 +48,12 @@ async function exchangeCode(code, clientId, clientSecret) {
 }
 
 async function getPersonUrn(accessToken) {
-  const res = await fetch('https://api.linkedin.com/v2/userinfo', {
-    headers: { Authorization: `Bearer ${accessToken}` },
+  const res = await fetch('https://api.linkedin.com/v2/me', {
+    headers: { Authorization: `Bearer ${accessToken}`, 'X-Restli-Protocol-Version': '2.0.0' },
   });
   if (!res.ok) throw new Error(`Failed to get LinkedIn profile: ${await res.text()}`);
   const data = await res.json();
-  return `urn:li:person:${data.sub}`;
+  return `urn:li:person:${data.id}`;
 }
 
 /**
