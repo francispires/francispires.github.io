@@ -3,7 +3,7 @@ import BlogLayout from '../../layouts/BlogLayout.astro';
 import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  const posts = await getCollection('blog', ({ data }) => import.meta.env.PROD ? !data.draft : true);
   return posts.map(post => ({
     params: { slug: post.slug },
     props: { post },
@@ -13,7 +13,7 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 
 // Find bilingual counterpart
-const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+const allPosts = await getCollection('blog', ({ data }) => import.meta.env.PROD ? !data.draft : true);
 const translation = post.data.translationKey
   ? allPosts.find(
       p =>
