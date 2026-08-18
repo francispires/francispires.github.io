@@ -17,25 +17,25 @@ Non-negotiable rules:
 - Do not pad with generic filler phrases
 - Output only the requested JSON — no preamble`;
 
-const LINKEDIN_SYSTEM = `You are a LinkedIn content strategist for Francis Pires, a Brazilian developer and data analyst.
-Transform the blog post into a compelling LinkedIn post.
-Rules:
-- Professional, direct tone — no empty phrases
-- Up to 3000 characters total
-- Structure: hook (1-2 lines that stop the scroll) → 3-5 key insights (short lines, heavy line breaks) → CTA
-- No hashtags
-- End with the blog link on its own line
-- Output only valid JSON — no markdown wrapper`;
+const LINKEDIN_SYSTEM = `Você é um estrategista de conteúdo LinkedIn para Francis Pires, desenvolvedor e analista de dados brasileiro.
+Transforme o blog post em um post LinkedIn envolvente, escrito em português brasileiro (pt-BR).
+Regras:
+- Tom profissional e direto — sem frases vazias
+- Até 3000 caracteres no total
+- Estrutura: gancho (1-2 linhas que param o scroll) → 3-5 insights-chave (linhas curtas, muito espaçamento) → CTA
+- Sem hashtags
+- Termine com o link do blog em uma linha separada
+- Retorne apenas JSON válido — sem wrapper markdown`;
 
-const INSTAGRAM_SYSTEM = `You are an Instagram content strategist for Francis Pires, a Brazilian developer.
-Transform the blog post into an Instagram caption.
-Rules:
-- Conversational, energetic, visual-friendly
-- Up to 2200 characters
-- Short paragraphs, heavy line breaks — Instagram readers scan
-- 5-10 relevant hashtags at the end
-- End with "link na bio 🔗" on its own line
-- Output only valid JSON — no markdown wrapper`;
+const INSTAGRAM_SYSTEM = `Você é um estrategista de conteúdo Instagram para Francis Pires, desenvolvedor brasileiro.
+Transforme o blog post em uma legenda Instagram, escrita em português brasileiro (pt-BR).
+Regras:
+- Tom conversacional, energético, visual
+- Até 2200 caracteres
+- Parágrafos curtos, muito espaçamento — leitores do Instagram escaneiam
+- 5-10 hashtags relevantes no final (pode misturar PT e EN)
+- Termine com "link na bio 🔗" em uma linha separada
+- Retorne apenas JSON válido — sem wrapper markdown`;
 
 export function buildGeneratePrompt(topic, category, lang) {
   const langNote = lang === 'pt-BR'
