@@ -2,10 +2,12 @@
 import BlogLayout from '../../layouts/BlogLayout.astro';
 import { getCollection } from 'astro:content';
 
+const stripDate = (slug) => slug.replace(/^\d{4}-\d{2}-\d{2}-/, '');
+
 export async function getStaticPaths() {
   const posts = await getCollection('blog', ({ data }) => import.meta.env.PROD ? !data.draft : true);
   return posts.map(post => ({
-    params: { slug: post.slug },
+    params: { slug: stripDate(post.slug) },
     props: { post },
   }));
 }
@@ -22,7 +24,7 @@ const translation = post.data.translationKey
     )
   : undefined;
 
-const translationUrl = translation ? `/blog/${translation.slug}` : undefined;
+const translationUrl = translation ? `/blog/${stripDate(translation.slug)}` : undefined;
 
 const { Content } = await post.render();
 ---

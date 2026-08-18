@@ -9,6 +9,7 @@
     "astro": "astro",
     "new-post": "node scripts/new-post.mjs",
     "publish-post": "node scripts/publish-post.mjs",
+    "remove-post": "node scripts/remove-post.mjs",
     "test": "vitest run"
   },
   "devDependencies": {

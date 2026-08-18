@@ -60,7 +60,7 @@ function ptCat(cat: string) { return catPt[cat] ?? cat; }
       <div class="posts-list" id="posts-list">
         {allPosts.map(p => (
           <PostCard
-            slug={p.slug}
+            slug={p.slug.replace(/^\d{4}-\d{2}-\d{2}-/, '')}
             title={p.data.title}
             pubDate={p.data.pubDate}
             description={p.data.description}
